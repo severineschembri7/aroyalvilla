@@ -17,6 +17,7 @@ import { Route as BookRouteImport } from './routes/book'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RoomsRoomIdRouteImport } from './routes/rooms.$roomId'
+import { Route as BookConfirmationRouteImport } from './routes/book.confirmation'
 
 const RoomsRoute = RoomsRouteImport.update({
   id: '/rooms',
@@ -58,36 +59,44 @@ const RoomsRoomIdRoute = RoomsRoomIdRouteImport.update({
   path: '/$roomId',
   getParentRoute: () => RoomsRoute,
 } as any)
+const BookConfirmationRoute = BookConfirmationRouteImport.update({
+  id: '/confirmation',
+  path: '/confirmation',
+  getParentRoute: () => BookRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/book': typeof BookRoute
+  '/book': typeof BookRouteWithChildren
   '/conference': typeof ConferenceRoute
   '/contact': typeof ContactRoute
   '/gallery': typeof GalleryRoute
   '/rooms': typeof RoomsRouteWithChildren
+  '/book/confirmation': typeof BookConfirmationRoute
   '/rooms/$roomId': typeof RoomsRoomIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/book': typeof BookRoute
+  '/book': typeof BookRouteWithChildren
   '/conference': typeof ConferenceRoute
   '/contact': typeof ContactRoute
   '/gallery': typeof GalleryRoute
   '/rooms': typeof RoomsRouteWithChildren
+  '/book/confirmation': typeof BookConfirmationRoute
   '/rooms/$roomId': typeof RoomsRoomIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/book': typeof BookRoute
+  '/book': typeof BookRouteWithChildren
   '/conference': typeof ConferenceRoute
   '/contact': typeof ContactRoute
   '/gallery': typeof GalleryRoute
   '/rooms': typeof RoomsRouteWithChildren
+  '/book/confirmation': typeof BookConfirmationRoute
   '/rooms/$roomId': typeof RoomsRoomIdRoute
 }
 export interface FileRouteTypes {
@@ -100,6 +109,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/gallery'
     | '/rooms'
+    | '/book/confirmation'
     | '/rooms/$roomId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -110,6 +120,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/gallery'
     | '/rooms'
+    | '/book/confirmation'
     | '/rooms/$roomId'
   id:
     | '__root__'
@@ -120,13 +131,14 @@ export interface FileRouteTypes {
     | '/contact'
     | '/gallery'
     | '/rooms'
+    | '/book/confirmation'
     | '/rooms/$roomId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  BookRoute: typeof BookRoute
+  BookRoute: typeof BookRouteWithChildren
   ConferenceRoute: typeof ConferenceRoute
   ContactRoute: typeof ContactRoute
   GalleryRoute: typeof GalleryRoute
@@ -191,8 +203,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RoomsRoomIdRouteImport
       parentRoute: typeof RoomsRoute
     }
+    '/book/confirmation': {
+      id: '/book/confirmation'
+      path: '/confirmation'
+      fullPath: '/book/confirmation'
+      preLoaderRoute: typeof BookConfirmationRouteImport
+      parentRoute: typeof BookRoute
+    }
   }
 }
+
+interface BookRouteChildren {
+  BookConfirmationRoute: typeof BookConfirmationRoute
+}
+
+const BookRouteChildren: BookRouteChildren = {
+  BookConfirmationRoute: BookConfirmationRoute,
+}
+
+const BookRouteWithChildren = BookRoute._addFileChildren(BookRouteChildren)
 
 interface RoomsRouteChildren {
   RoomsRoomIdRoute: typeof RoomsRoomIdRoute
@@ -207,7 +236,7 @@ const RoomsRouteWithChildren = RoomsRoute._addFileChildren(RoomsRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  BookRoute: BookRoute,
+  BookRoute: BookRouteWithChildren,
   ConferenceRoute: ConferenceRoute,
   ContactRoute: ContactRoute,
   GalleryRoute: GalleryRoute,
