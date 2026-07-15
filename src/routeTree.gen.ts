@@ -11,12 +11,20 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as RoomsRouteImport } from './routes/rooms'
 import { Route as GalleryRouteImport } from './routes/gallery'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ConferenceRouteImport } from './routes/conference'
 import { Route as BookRouteImport } from './routes/book'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as RoomsRoomIdRouteImport } from './routes/rooms.$roomId'
+import { Route as DashboardReservationsRouteImport } from './routes/dashboard.reservations'
+import { Route as DashboardReportsRouteImport } from './routes/dashboard.reports'
+import { Route as DashboardHousekeepingRouteImport } from './routes/dashboard.housekeeping'
+import { Route as DashboardGuestsRouteImport } from './routes/dashboard.guests'
+import { Route as DashboardChannelsRouteImport } from './routes/dashboard.channels'
+import { Route as DashboardCalendarRouteImport } from './routes/dashboard.calendar'
 import { Route as BookConfirmationRouteImport } from './routes/book.confirmation'
 
 const RoomsRoute = RoomsRouteImport.update({
@@ -27,6 +35,11 @@ const RoomsRoute = RoomsRouteImport.update({
 const GalleryRoute = GalleryRouteImport.update({
   id: '/gallery',
   path: '/gallery',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -54,10 +67,45 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardIndexRoute = DashboardIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const RoomsRoomIdRoute = RoomsRoomIdRouteImport.update({
   id: '/$roomId',
   path: '/$roomId',
   getParentRoute: () => RoomsRoute,
+} as any)
+const DashboardReservationsRoute = DashboardReservationsRouteImport.update({
+  id: '/reservations',
+  path: '/reservations',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardReportsRoute = DashboardReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardHousekeepingRoute = DashboardHousekeepingRouteImport.update({
+  id: '/housekeeping',
+  path: '/housekeeping',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardGuestsRoute = DashboardGuestsRouteImport.update({
+  id: '/guests',
+  path: '/guests',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardChannelsRoute = DashboardChannelsRouteImport.update({
+  id: '/channels',
+  path: '/channels',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardCalendarRoute = DashboardCalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
+  getParentRoute: () => DashboardRoute,
 } as any)
 const BookConfirmationRoute = BookConfirmationRouteImport.update({
   id: '/confirmation',
@@ -71,10 +119,18 @@ export interface FileRoutesByFullPath {
   '/book': typeof BookRouteWithChildren
   '/conference': typeof ConferenceRoute
   '/contact': typeof ContactRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/gallery': typeof GalleryRoute
   '/rooms': typeof RoomsRouteWithChildren
   '/book/confirmation': typeof BookConfirmationRoute
+  '/dashboard/calendar': typeof DashboardCalendarRoute
+  '/dashboard/channels': typeof DashboardChannelsRoute
+  '/dashboard/guests': typeof DashboardGuestsRoute
+  '/dashboard/housekeeping': typeof DashboardHousekeepingRoute
+  '/dashboard/reports': typeof DashboardReportsRoute
+  '/dashboard/reservations': typeof DashboardReservationsRoute
   '/rooms/$roomId': typeof RoomsRoomIdRoute
+  '/dashboard/': typeof DashboardIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -85,7 +141,14 @@ export interface FileRoutesByTo {
   '/gallery': typeof GalleryRoute
   '/rooms': typeof RoomsRouteWithChildren
   '/book/confirmation': typeof BookConfirmationRoute
+  '/dashboard/calendar': typeof DashboardCalendarRoute
+  '/dashboard/channels': typeof DashboardChannelsRoute
+  '/dashboard/guests': typeof DashboardGuestsRoute
+  '/dashboard/housekeeping': typeof DashboardHousekeepingRoute
+  '/dashboard/reports': typeof DashboardReportsRoute
+  '/dashboard/reservations': typeof DashboardReservationsRoute
   '/rooms/$roomId': typeof RoomsRoomIdRoute
+  '/dashboard': typeof DashboardIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -94,10 +157,18 @@ export interface FileRoutesById {
   '/book': typeof BookRouteWithChildren
   '/conference': typeof ConferenceRoute
   '/contact': typeof ContactRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/gallery': typeof GalleryRoute
   '/rooms': typeof RoomsRouteWithChildren
   '/book/confirmation': typeof BookConfirmationRoute
+  '/dashboard/calendar': typeof DashboardCalendarRoute
+  '/dashboard/channels': typeof DashboardChannelsRoute
+  '/dashboard/guests': typeof DashboardGuestsRoute
+  '/dashboard/housekeeping': typeof DashboardHousekeepingRoute
+  '/dashboard/reports': typeof DashboardReportsRoute
+  '/dashboard/reservations': typeof DashboardReservationsRoute
   '/rooms/$roomId': typeof RoomsRoomIdRoute
+  '/dashboard/': typeof DashboardIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -107,10 +178,18 @@ export interface FileRouteTypes {
     | '/book'
     | '/conference'
     | '/contact'
+    | '/dashboard'
     | '/gallery'
     | '/rooms'
     | '/book/confirmation'
+    | '/dashboard/calendar'
+    | '/dashboard/channels'
+    | '/dashboard/guests'
+    | '/dashboard/housekeeping'
+    | '/dashboard/reports'
+    | '/dashboard/reservations'
     | '/rooms/$roomId'
+    | '/dashboard/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -121,7 +200,14 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/rooms'
     | '/book/confirmation'
+    | '/dashboard/calendar'
+    | '/dashboard/channels'
+    | '/dashboard/guests'
+    | '/dashboard/housekeeping'
+    | '/dashboard/reports'
+    | '/dashboard/reservations'
     | '/rooms/$roomId'
+    | '/dashboard'
   id:
     | '__root__'
     | '/'
@@ -129,10 +215,18 @@ export interface FileRouteTypes {
     | '/book'
     | '/conference'
     | '/contact'
+    | '/dashboard'
     | '/gallery'
     | '/rooms'
     | '/book/confirmation'
+    | '/dashboard/calendar'
+    | '/dashboard/channels'
+    | '/dashboard/guests'
+    | '/dashboard/housekeeping'
+    | '/dashboard/reports'
+    | '/dashboard/reservations'
     | '/rooms/$roomId'
+    | '/dashboard/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -141,6 +235,7 @@ export interface RootRouteChildren {
   BookRoute: typeof BookRouteWithChildren
   ConferenceRoute: typeof ConferenceRoute
   ContactRoute: typeof ContactRoute
+  DashboardRoute: typeof DashboardRouteWithChildren
   GalleryRoute: typeof GalleryRoute
   RoomsRoute: typeof RoomsRouteWithChildren
 }
@@ -159,6 +254,13 @@ declare module '@tanstack/react-router' {
       path: '/gallery'
       fullPath: '/gallery'
       preLoaderRoute: typeof GalleryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -196,12 +298,61 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/': {
+      id: '/dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/rooms/$roomId': {
       id: '/rooms/$roomId'
       path: '/$roomId'
       fullPath: '/rooms/$roomId'
       preLoaderRoute: typeof RoomsRoomIdRouteImport
       parentRoute: typeof RoomsRoute
+    }
+    '/dashboard/reservations': {
+      id: '/dashboard/reservations'
+      path: '/reservations'
+      fullPath: '/dashboard/reservations'
+      preLoaderRoute: typeof DashboardReservationsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/reports': {
+      id: '/dashboard/reports'
+      path: '/reports'
+      fullPath: '/dashboard/reports'
+      preLoaderRoute: typeof DashboardReportsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/housekeeping': {
+      id: '/dashboard/housekeeping'
+      path: '/housekeeping'
+      fullPath: '/dashboard/housekeeping'
+      preLoaderRoute: typeof DashboardHousekeepingRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/guests': {
+      id: '/dashboard/guests'
+      path: '/guests'
+      fullPath: '/dashboard/guests'
+      preLoaderRoute: typeof DashboardGuestsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/channels': {
+      id: '/dashboard/channels'
+      path: '/channels'
+      fullPath: '/dashboard/channels'
+      preLoaderRoute: typeof DashboardChannelsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/calendar': {
+      id: '/dashboard/calendar'
+      path: '/calendar'
+      fullPath: '/dashboard/calendar'
+      preLoaderRoute: typeof DashboardCalendarRouteImport
+      parentRoute: typeof DashboardRoute
     }
     '/book/confirmation': {
       id: '/book/confirmation'
@@ -223,6 +374,30 @@ const BookRouteChildren: BookRouteChildren = {
 
 const BookRouteWithChildren = BookRoute._addFileChildren(BookRouteChildren)
 
+interface DashboardRouteChildren {
+  DashboardCalendarRoute: typeof DashboardCalendarRoute
+  DashboardChannelsRoute: typeof DashboardChannelsRoute
+  DashboardGuestsRoute: typeof DashboardGuestsRoute
+  DashboardHousekeepingRoute: typeof DashboardHousekeepingRoute
+  DashboardReportsRoute: typeof DashboardReportsRoute
+  DashboardReservationsRoute: typeof DashboardReservationsRoute
+  DashboardIndexRoute: typeof DashboardIndexRoute
+}
+
+const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardCalendarRoute: DashboardCalendarRoute,
+  DashboardChannelsRoute: DashboardChannelsRoute,
+  DashboardGuestsRoute: DashboardGuestsRoute,
+  DashboardHousekeepingRoute: DashboardHousekeepingRoute,
+  DashboardReportsRoute: DashboardReportsRoute,
+  DashboardReservationsRoute: DashboardReservationsRoute,
+  DashboardIndexRoute: DashboardIndexRoute,
+}
+
+const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
+  DashboardRouteChildren,
+)
+
 interface RoomsRouteChildren {
   RoomsRoomIdRoute: typeof RoomsRoomIdRoute
 }
@@ -239,6 +414,7 @@ const rootRouteChildren: RootRouteChildren = {
   BookRoute: BookRouteWithChildren,
   ConferenceRoute: ConferenceRoute,
   ContactRoute: ContactRoute,
+  DashboardRoute: DashboardRouteWithChildren,
   GalleryRoute: GalleryRoute,
   RoomsRoute: RoomsRouteWithChildren,
 }
