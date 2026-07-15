@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 
-const tabs = [
+const tabs: { to: string; label: string; exact?: boolean }[] = [
   { to: "/dashboard", label: "Today", exact: true },
   { to: "/dashboard/calendar", label: "Calendar" },
   { to: "/dashboard/reservations", label: "Reservations" },
@@ -8,7 +8,7 @@ const tabs = [
   { to: "/dashboard/housekeeping", label: "Housekeeping" },
   { to: "/dashboard/reports", label: "Reporting" },
   { to: "/dashboard/channels", label: "Channels" },
-] as const;
+];
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
