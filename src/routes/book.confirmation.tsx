@@ -107,7 +107,7 @@ function ConfirmationPage() {
             Back to home
           </Link>
           <a
-            href="https://wa.me/255754000000"
+            href="https://wa.me/255759533491"
             target="_blank"
             rel="noreferrer"
             className="inline-flex items-center px-6 py-2.5 bg-terracotta text-cream font-medium rounded-md hover:bg-espresso transition-colors"

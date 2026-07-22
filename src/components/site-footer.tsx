@@ -46,7 +46,7 @@ export function SiteFooter() {
               Contact
             </span>
             <span className="text-sm text-espresso">Karatu Highway, Arusha Region</span>
-            <span className="text-sm text-espresso">+255 754 000 000</span>
+            <span className="text-sm text-espresso">+255 759 533 491</span>
             <span className="text-sm text-espresso">hello@africanroyalvilla.com</span>
           </div>
         </div>
