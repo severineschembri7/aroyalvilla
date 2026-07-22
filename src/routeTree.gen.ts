@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as RoomsRouteImport } from './routes/rooms'
+import { Route as LookupRouteImport } from './routes/lookup'
 import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ConferenceRouteImport } from './routes/conference'
@@ -22,6 +23,11 @@ import { Route as BookConfirmationRouteImport } from './routes/book.confirmation
 const RoomsRoute = RoomsRouteImport.update({
   id: '/rooms',
   path: '/rooms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LookupRoute = LookupRouteImport.update({
+  id: '/lookup',
+  path: '/lookup',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GalleryRoute = GalleryRouteImport.update({
@@ -72,6 +78,7 @@ export interface FileRoutesByFullPath {
   '/conference': typeof ConferenceRoute
   '/contact': typeof ContactRoute
   '/gallery': typeof GalleryRoute
+  '/lookup': typeof LookupRoute
   '/rooms': typeof RoomsRouteWithChildren
   '/book/confirmation': typeof BookConfirmationRoute
   '/rooms/$roomId': typeof RoomsRoomIdRoute
@@ -83,6 +90,7 @@ export interface FileRoutesByTo {
   '/conference': typeof ConferenceRoute
   '/contact': typeof ContactRoute
   '/gallery': typeof GalleryRoute
+  '/lookup': typeof LookupRoute
   '/rooms': typeof RoomsRouteWithChildren
   '/book/confirmation': typeof BookConfirmationRoute
   '/rooms/$roomId': typeof RoomsRoomIdRoute
@@ -95,6 +103,7 @@ export interface FileRoutesById {
   '/conference': typeof ConferenceRoute
   '/contact': typeof ContactRoute
   '/gallery': typeof GalleryRoute
+  '/lookup': typeof LookupRoute
   '/rooms': typeof RoomsRouteWithChildren
   '/book/confirmation': typeof BookConfirmationRoute
   '/rooms/$roomId': typeof RoomsRoomIdRoute
@@ -108,6 +117,7 @@ export interface FileRouteTypes {
     | '/conference'
     | '/contact'
     | '/gallery'
+    | '/lookup'
     | '/rooms'
     | '/book/confirmation'
     | '/rooms/$roomId'
@@ -119,6 +129,7 @@ export interface FileRouteTypes {
     | '/conference'
     | '/contact'
     | '/gallery'
+    | '/lookup'
     | '/rooms'
     | '/book/confirmation'
     | '/rooms/$roomId'
@@ -130,6 +141,7 @@ export interface FileRouteTypes {
     | '/conference'
     | '/contact'
     | '/gallery'
+    | '/lookup'
     | '/rooms'
     | '/book/confirmation'
     | '/rooms/$roomId'
@@ -142,6 +154,7 @@ export interface RootRouteChildren {
   ConferenceRoute: typeof ConferenceRoute
   ContactRoute: typeof ContactRoute
   GalleryRoute: typeof GalleryRoute
+  LookupRoute: typeof LookupRoute
   RoomsRoute: typeof RoomsRouteWithChildren
 }
 
@@ -152,6 +165,13 @@ declare module '@tanstack/react-router' {
       path: '/rooms'
       fullPath: '/rooms'
       preLoaderRoute: typeof RoomsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lookup': {
+      id: '/lookup'
+      path: '/lookup'
+      fullPath: '/lookup'
+      preLoaderRoute: typeof LookupRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/gallery': {
@@ -240,6 +260,7 @@ const rootRouteChildren: RootRouteChildren = {
   ConferenceRoute: ConferenceRoute,
   ContactRoute: ContactRoute,
   GalleryRoute: GalleryRoute,
+  LookupRoute: LookupRoute,
   RoomsRoute: RoomsRouteWithChildren,
 }
 export const routeTree = rootRouteImport
