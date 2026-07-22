@@ -14,16 +14,134 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      booking_guests: {
+        Row: {
+          country: string | null
+          created_at: string
+          email: string
+          first_name: string
+          last_name: string
+          phone: string
+          reference: string
+          requests: string | null
+        }
+        Insert: {
+          country?: string | null
+          created_at?: string
+          email: string
+          first_name: string
+          last_name: string
+          phone: string
+          reference: string
+          requests?: string | null
+        }
+        Update: {
+          country?: string | null
+          created_at?: string
+          email?: string
+          first_name?: string
+          last_name?: string
+          phone?: string
+          reference?: string
+          requests?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_guests_reference_fkey"
+            columns: ["reference"]
+            isOneToOne: true
+            referencedRelation: "bookings"
+            referencedColumns: ["reference"]
+          },
+        ]
+      }
+      bookings: {
+        Row: {
+          addons: string[]
+          check_in: string
+          check_out: string
+          created_at: string
+          guests: number
+          nights: number
+          payment_method: string
+          rate_per_night: number
+          reference: string
+          room_id: string
+          room_name: string
+          status: Database["public"]["Enums"]["booking_status"]
+          total: number
+          updated_at: string
+        }
+        Insert: {
+          addons?: string[]
+          check_in: string
+          check_out: string
+          created_at?: string
+          guests: number
+          nights: number
+          payment_method: string
+          rate_per_night: number
+          reference: string
+          room_id: string
+          room_name: string
+          status?: Database["public"]["Enums"]["booking_status"]
+          total: number
+          updated_at?: string
+        }
+        Update: {
+          addons?: string[]
+          check_in?: string
+          check_out?: string
+          created_at?: string
+          guests?: number
+          nights?: number
+          payment_method?: string
+          rate_per_night?: number
+          reference?: string
+          room_id?: string
+          room_name?: string
+          status?: Database["public"]["Enums"]["booking_status"]
+          total?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      lookup_booking: {
+        Args: { _email: string; _phone: string; _reference: string }
+        Returns: {
+          addons: string[]
+          check_in: string
+          check_out: string
+          created_at: string
+          email: string
+          first_name: string
+          guests: number
+          last_name: string
+          nights: number
+          payment_method: string
+          phone: string
+          rate_per_night: number
+          reference: string
+          room_id: string
+          room_name: string
+          status: Database["public"]["Enums"]["booking_status"]
+          total: number
+          updated_at: string
+        }[]
+      }
     }
     Enums: {
-      [_ in never]: never
+      booking_status:
+        | "pending"
+        | "confirmed"
+        | "checked_in"
+        | "checked_out"
+        | "cancelled"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +268,14 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      booking_status: [
+        "pending",
+        "confirmed",
+        "checked_in",
+        "checked_out",
+        "cancelled",
+      ],
+    },
   },
 } as const
