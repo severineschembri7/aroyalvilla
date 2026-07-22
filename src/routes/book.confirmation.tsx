@@ -1,6 +1,20 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { findBooking, type StoredBooking } from "@/lib/bookings";
+import { supabase } from "@/integrations/supabase/client";
+import { STATUS_LABEL, type BookingStatus } from "@/lib/bookings";
+import { useBookingStatus } from "@/hooks/use-holds";
+
+type PublicBooking = {
+  reference: string;
+  room_name: string;
+  check_in: string;
+  check_out: string;
+  guests: number;
+  nights: number;
+  total: number;
+  payment_method: string;
+  status: BookingStatus;
+};
 
 export const Route = createFileRoute("/book/confirmation")({
   validateSearch: (raw: Record<string, unknown>) => ({
@@ -17,11 +31,29 @@ export const Route = createFileRoute("/book/confirmation")({
 
 function ConfirmationPage() {
   const { ref } = Route.useSearch();
-  const [booking, setBooking] = useState<StoredBooking | undefined>();
+  const [booking, setBooking] = useState<PublicBooking | null>(null);
+  const { status: liveStatus } = useBookingStatus(ref);
 
   useEffect(() => {
-    setBooking(findBooking(ref));
+    if (!ref) return;
+    let cancelled = false;
+    void (async () => {
+      const { data } = await supabase
+        .from("bookings")
+        .select("reference, room_name, check_in, check_out, guests, nights, total, payment_method, status")
+        .eq("reference", ref)
+        .maybeSingle();
+      if (!cancelled && data) setBooking(data as PublicBooking);
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, [ref]);
+
+  const status = (liveStatus as BookingStatus | null) ?? booking?.status ?? "pending";
+  const waHref = `https://wa.me/255759533491?text=${encodeURIComponent(
+    `Hello African Royal Villa, I'd like to ask about my booking ${ref}.`,
+  )}`;
 
   return (
     <div className="animate-fade-in max-w-3xl mx-auto px-6 py-20">
@@ -39,15 +71,12 @@ function ConfirmationPage() {
             <path d="M20 6L9 17l-5-5" />
           </svg>
         </div>
-        <span className="text-xs font-semibold tracking-[0.3em] uppercase text-terracotta">
-          Confirmed
-        </span>
+        <StatusBadge status={status} />
         <h1 className="mt-2 font-serif text-4xl md:text-5xl font-medium italic">
           Karibu — we've got you
         </h1>
         <p className="mt-4 text-espresso/70">
-          A confirmation email is on its way
-          {booking?.guest.email ? ` to ${booking.guest.email}` : ""}.
+          Our front desk will confirm shortly. This page updates automatically as your booking status changes.
         </p>
       </div>
 
@@ -63,13 +92,10 @@ function ConfirmationPage() {
 
         {booking ? (
           <dl className="mt-6 grid sm:grid-cols-2 gap-y-5 gap-x-8 text-sm">
-            <Field label="Room" value={booking.roomName} />
-            <Field
-              label="Guest"
-              value={`${booking.guest.firstName} ${booking.guest.lastName}`.trim() || "—"}
-            />
-            <Field label="Arrival" value={booking.checkIn} />
-            <Field label="Departure" value={booking.checkOut} />
+            <Field label="Room" value={booking.room_name} />
+            <Field label="Status" value={STATUS_LABEL[status]} />
+            <Field label="Arrival" value={booking.check_in} />
+            <Field label="Departure" value={booking.check_out} />
             <Field
               label="Nights"
               value={`${booking.nights} · ${booking.guests} guest${
@@ -78,7 +104,7 @@ function ConfirmationPage() {
             />
             <Field
               label="Payment"
-              value={booking.paymentMethod === "card" ? "Credit card" : "Mobile money"}
+              value={booking.payment_method === "card" ? "Credit card" : "Mobile money"}
             />
             <div className="sm:col-span-2 pt-4 border-t border-espresso/10 flex justify-between items-baseline">
               <span className="text-xs uppercase tracking-widest text-espresso/40">
@@ -97,7 +123,7 @@ function ConfirmationPage() {
 
       <div className="mt-10 text-center space-y-4">
         <p className="text-sm text-espresso/60">
-          Questions before you arrive? Message us directly on WhatsApp.
+          Questions before you arrive? Message us directly on WhatsApp — your reference is prefilled.
         </p>
         <div className="flex justify-center gap-3">
           <Link
@@ -107,16 +133,40 @@ function ConfirmationPage() {
             Back to home
           </Link>
           <a
-            href="https://wa.me/255759533491"
+            href={waHref}
             target="_blank"
             rel="noreferrer"
             className="inline-flex items-center px-6 py-2.5 bg-terracotta text-cream font-medium rounded-md hover:bg-espresso transition-colors"
           >
             WhatsApp us
           </a>
+          <Link
+            to="/lookup"
+            search={{ ref }}
+            className="inline-flex items-center px-6 py-2.5 border border-espresso/20 text-espresso font-medium rounded-md hover:bg-cream transition-colors"
+          >
+            Look up later
+          </Link>
         </div>
       </div>
     </div>
+  );
+}
+
+function StatusBadge({ status }: { status: BookingStatus }) {
+  const tone: Record<BookingStatus, string> = {
+    pending: "bg-gold/20 text-espresso",
+    confirmed: "bg-sage/40 text-espresso",
+    checked_in: "bg-terracotta/15 text-terracotta",
+    checked_out: "bg-espresso/10 text-espresso/70",
+    cancelled: "bg-terracotta/20 text-terracotta",
+  };
+  return (
+    <span
+      className={`inline-block text-xs font-semibold tracking-[0.3em] uppercase px-3 py-1 rounded-full ${tone[status]}`}
+    >
+      {STATUS_LABEL[status]}
+    </span>
   );
 }
 
