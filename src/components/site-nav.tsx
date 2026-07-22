@@ -40,13 +40,6 @@ export function SiteNav() {
           >
             Book Stay
           </Link>
-          <Link
-            to="/dashboard"
-            className="hidden md:inline-flex text-xs font-medium text-espresso/60 hover:text-terracotta transition-colors border border-espresso/20 px-3 py-2"
-            title="Staff dashboard"
-          >
-            Staff
-          </Link>
         </div>
       </div>
     </nav>
