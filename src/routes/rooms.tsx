@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AvailabilityWidget } from "@/components/availability-widget";
 import { rooms, availabilityFor, nightsBetween } from "@/lib/rooms";
+import { useHolds } from "@/hooks/use-holds";
 
 type Search = {
   checkIn?: string;
@@ -36,6 +37,7 @@ function RoomsPage() {
   const search = Route.useSearch();
   const { checkIn, checkOut, guests, roomType } = search;
   const nights = checkIn && checkOut ? nightsBetween(checkIn, checkOut) : 0;
+  const { holds } = useHolds();
 
   const visible = rooms.filter((r) => {
     if (roomType && roomType !== "any" && r.id !== roomType) return false;
@@ -83,7 +85,7 @@ function RoomsPage() {
             {visible.map((room) => {
               const avail =
                 checkIn && checkOut
-                  ? availabilityFor(room.id, checkIn, checkOut)
+                  ? availabilityFor(room.id, checkIn, checkOut, holds)
                   : { available: room.totalUnits, total: room.totalUnits };
               const totalPrice = nights > 0 ? nights * room.rate : null;
               return (

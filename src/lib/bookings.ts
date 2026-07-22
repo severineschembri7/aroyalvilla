@@ -1,3 +1,21 @@
+import { supabase } from "@/integrations/supabase/client";
+
+export type BookingStatus =
+  | "pending"
+  | "confirmed"
+  | "checked_in"
+  | "checked_out"
+  | "cancelled";
+
+export type GuestDetails = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  country: string;
+  requests: string;
+};
+
 export type StoredBooking = {
   reference: string;
   roomId: string;
@@ -9,40 +27,11 @@ export type StoredBooking = {
   ratePerNight: number;
   addons: string[];
   total: number;
-  guest: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-    country: string;
-    requests: string;
-  };
+  guest: GuestDetails;
   paymentMethod: "card" | "mobile";
+  status: BookingStatus;
   createdAt: string;
 };
-
-const KEY = "arv-bookings";
-
-export function saveBooking(b: StoredBooking) {
-  if (typeof window === "undefined") return;
-  const list = readBookings();
-  list.push(b);
-  window.localStorage.setItem(KEY, JSON.stringify(list));
-}
-
-export function readBookings(): StoredBooking[] {
-  if (typeof window === "undefined") return [];
-  try {
-    const raw = window.localStorage.getItem(KEY);
-    return raw ? (JSON.parse(raw) as StoredBooking[]) : [];
-  } catch {
-    return [];
-  }
-}
-
-export function findBooking(ref: string): StoredBooking | undefined {
-  return readBookings().find((b) => b.reference === ref);
-}
 
 export function generateReference(): string {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -50,3 +39,90 @@ export function generateReference(): string {
   for (let i = 0; i < 6; i++) out += chars[Math.floor(Math.random() * chars.length)];
   return out;
 }
+
+export type NewBookingInput = Omit<StoredBooking, "reference" | "status" | "createdAt"> & {
+  reference?: string;
+};
+
+export async function createBooking(input: NewBookingInput): Promise<StoredBooking> {
+  const reference = (input.reference ?? generateReference()).toUpperCase();
+
+  const { error: bErr } = await supabase.from("bookings").insert({
+    reference,
+    room_id: input.roomId,
+    room_name: input.roomName,
+    check_in: input.checkIn,
+    check_out: input.checkOut,
+    guests: input.guests,
+    nights: input.nights,
+    rate_per_night: input.ratePerNight,
+    addons: input.addons,
+    total: input.total,
+    payment_method: input.paymentMethod,
+  });
+  if (bErr) throw bErr;
+
+  const { error: gErr } = await supabase.from("booking_guests").insert({
+    reference,
+    first_name: input.guest.firstName,
+    last_name: input.guest.lastName,
+    email: input.guest.email,
+    phone: input.guest.phone,
+    country: input.guest.country || null,
+    requests: input.guest.requests || null,
+  });
+  if (gErr) throw gErr;
+
+  return {
+    ...input,
+    reference,
+    status: "pending",
+    createdAt: new Date().toISOString(),
+  };
+}
+
+export async function lookupBooking(
+  reference: string,
+  email: string,
+  phone: string,
+): Promise<StoredBooking | null> {
+  const { data, error } = await supabase.rpc("lookup_booking", {
+    _reference: reference,
+    _email: email,
+    _phone: phone,
+  });
+  if (error) throw error;
+  const row = Array.isArray(data) ? data[0] : data;
+  if (!row) return null;
+  return {
+    reference: row.reference,
+    roomId: row.room_id,
+    roomName: row.room_name,
+    checkIn: row.check_in,
+    checkOut: row.check_out,
+    guests: row.guests,
+    nights: row.nights,
+    ratePerNight: Number(row.rate_per_night),
+    addons: row.addons ?? [],
+    total: Number(row.total),
+    paymentMethod: row.payment_method as "card" | "mobile",
+    status: row.status as BookingStatus,
+    createdAt: row.created_at,
+    guest: {
+      firstName: row.first_name,
+      lastName: row.last_name,
+      email: row.email,
+      phone: row.phone,
+      country: "",
+      requests: "",
+    },
+  };
+}
+
+export const STATUS_LABEL: Record<BookingStatus, string> = {
+  pending: "Pending confirmation",
+  confirmed: "Confirmed",
+  checked_in: "Checked in",
+  checked_out: "Checked out",
+  cancelled: "Cancelled",
+};

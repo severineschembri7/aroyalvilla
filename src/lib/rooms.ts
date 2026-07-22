@@ -70,47 +70,34 @@ export function findRoom(id: string): RoomCategory | undefined {
   return rooms.find((r) => r.id === id);
 }
 
-// Deterministic pseudo-availability so the UI feels alive without a backend.
-// Given check-in/check-out dates and a room, return the number of units still available.
+export type Hold = {
+  room_id: string;
+  check_in: string;
+  check_out: string;
+  status: string;
+};
+
+function overlaps(aStart: string, aEnd: string, bStart: string, bEnd: string): boolean {
+  return aStart < bEnd && bStart < aEnd;
+}
+
+// Real-time availability computed from live bookings. Cancelled bookings free the room.
 export function availabilityFor(
   roomId: string,
   checkIn: string,
   checkOut: string,
+  holds: Hold[] = [],
 ): { available: number; total: number } {
   const room = findRoom(roomId);
   if (!room) return { available: 0, total: 0 };
-  const seed = hashString(`${roomId}|${checkIn}|${checkOut}`);
-  const held = seed % (room.totalUnits + 1);
-  const booked = getLocalHoldsFor(roomId, checkIn, checkOut);
-  const available = Math.max(0, room.totalUnits - held - booked);
-  return { available, total: room.totalUnits };
-}
-
-function hashString(input: string): number {
-  let h = 2166136261;
-  for (let i = 0; i < input.length; i++) {
-    h ^= input.charCodeAt(i);
-    h = Math.imul(h, 16777619);
-  }
-  return Math.abs(h);
-}
-
-function getLocalHoldsFor(roomId: string, checkIn: string, checkOut: string): number {
-  if (typeof window === "undefined") return 0;
-  try {
-    const raw = window.localStorage.getItem("arv-bookings");
-    if (!raw) return 0;
-    const list = JSON.parse(raw) as Array<{ roomId: string; checkIn: string; checkOut: string }>;
-    return list.filter(
-      (b) => b.roomId === roomId && overlaps(b.checkIn, b.checkOut, checkIn, checkOut),
-    ).length;
-  } catch {
-    return 0;
-  }
-}
-
-function overlaps(aStart: string, aEnd: string, bStart: string, bEnd: string): boolean {
-  return aStart < bEnd && bStart < aEnd;
+  if (!checkIn || !checkOut) return { available: room.totalUnits, total: room.totalUnits };
+  const booked = holds.filter(
+    (h) =>
+      h.room_id === roomId &&
+      h.status !== "cancelled" &&
+      overlaps(h.check_in, h.check_out, checkIn, checkOut),
+  ).length;
+  return { available: Math.max(0, room.totalUnits - booked), total: room.totalUnits };
 }
 
 export function nightsBetween(checkIn: string, checkOut: string): number {

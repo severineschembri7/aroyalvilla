@@ -1,7 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { rooms, findRoom, nightsBetween } from "@/lib/rooms";
-import { generateReference, saveBooking } from "@/lib/bookings";
+import { rooms, findRoom, nightsBetween, availabilityFor } from "@/lib/rooms";
+import { createBooking } from "@/lib/bookings";
+import { useHolds } from "@/hooks/use-holds";
 
 type Search = {
   roomId?: string;
@@ -42,8 +43,11 @@ const ADDONS = [
 function BookPage() {
   const search = Route.useSearch();
   const navigate = useNavigate();
+  const { holds } = useHolds();
 
   const [step, setStep] = useState(1);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [roomId, setRoomId] = useState(search.roomId ?? "deluxe");
   const [checkIn, setCheckIn] = useState(search.checkIn ?? todayISO(7));
   const [checkOut, setCheckOut] = useState(search.checkOut ?? todayISO(10));
@@ -62,6 +66,7 @@ function BookPage() {
   const room = findRoom(roomId) ?? rooms[0];
   const nights = nightsBetween(checkIn, checkOut);
   const roomTotal = nights * room.rate;
+  const avail = availabilityFor(room.id, checkIn, checkOut, holds);
   const addonsTotal = useMemo(
     () =>
       addons.reduce((sum, id) => sum + (ADDONS.find((a) => a.id === id)?.price ?? 0), 0),
@@ -69,24 +74,28 @@ function BookPage() {
   );
   const total = roomTotal + addonsTotal;
 
-  const finish = () => {
-    const reference = generateReference();
-    saveBooking({
-      reference,
-      roomId: room.id,
-      roomName: room.name,
-      checkIn,
-      checkOut,
-      guests,
-      nights,
-      ratePerNight: room.rate,
-      addons,
-      total,
-      guest,
-      paymentMethod: payment,
-      createdAt: new Date().toISOString(),
-    });
-    navigate({ to: "/book/confirmation", search: { ref: reference } });
+  const finish = async () => {
+    setError(null);
+    setSubmitting(true);
+    try {
+      const booking = await createBooking({
+        roomId: room.id,
+        roomName: room.name,
+        checkIn,
+        checkOut,
+        guests,
+        nights,
+        ratePerNight: room.rate,
+        addons,
+        total,
+        guest,
+        paymentMethod: payment,
+      });
+      navigate({ to: "/book/confirmation", search: { ref: booking.reference } });
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Could not save your booking. Please try again.");
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -346,12 +355,21 @@ function BookPage() {
               <button
                 type="button"
                 onClick={finish}
-                className="px-6 py-2.5 bg-terracotta text-cream font-medium rounded-md hover:bg-espresso transition-colors"
+                disabled={submitting || avail.available <= 0}
+                className="px-6 py-2.5 bg-terracotta text-cream font-medium rounded-md hover:bg-espresso transition-colors disabled:opacity-50"
               >
-                Confirm &amp; Pay ${total}
+                {submitting ? "Saving…" : `Confirm & Pay $${total}`}
               </button>
             )}
           </div>
+          {error && (
+            <p className="mt-4 text-sm text-terracotta">{error}</p>
+          )}
+          {avail.available <= 0 && (
+            <p className="mt-4 text-sm text-terracotta">
+              This room is fully booked for the selected dates. Please pick different dates or another room.
+            </p>
+          )}
         </div>
 
         <aside className="bg-white border border-espresso/10 rounded-2xl p-6 h-fit lg:sticky lg:top-24">
@@ -364,6 +382,15 @@ function BookPage() {
           </div>
           <div className="text-sm text-espresso/60">
             {nights} night{nights === 1 ? "" : "s"} · {guests} guest{guests === 1 ? "" : "s"}
+          </div>
+          <div className="mt-3 text-xs">
+            {avail.available > 0 ? (
+              <span className="text-sage-foreground text-espresso/70">
+                Live availability: <span className="font-medium text-espresso">{avail.available} of {avail.total}</span>
+              </span>
+            ) : (
+              <span className="text-terracotta font-medium">Fully booked for these dates</span>
+            )}
           </div>
 
           <dl className="mt-6 space-y-2 text-sm">

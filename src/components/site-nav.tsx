@@ -6,6 +6,7 @@ const links = [
   { to: "/gallery", label: "Gallery" },
   { to: "/about", label: "About" },
   { to: "/contact", label: "Contact" },
+  { to: "/lookup", label: "My Booking" },
 ] as const;
 
 export function SiteNav() {
