@@ -36,7 +36,8 @@ export const Route = createFileRoute("/book")({
 
 const ADDONS = [
   { id: "transfer", label: "Airport transfer (Kilimanjaro/Arusha)", price: 120 },
-  { id: "breakfast", label: "Full breakfast package", price: 25 },
+  { id: "halfboard", label: "Half board (breakfast & dinner)", price: 45 },
+  { id: "fullboard", label: "Full board (breakfast, lunch & dinner)", price: 70 },
   { id: "gamedrive", label: "Ngorongoro game-drive package", price: 240 },
 ];
 
