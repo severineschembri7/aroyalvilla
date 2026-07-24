@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import heroImg from "@/assets/hero.jpg";
+import { DirectionsWidget } from "@/components/directions-widget";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -84,7 +85,7 @@ function AboutPage() {
         </div>
       </section>
 
-      <section className="pb-24 px-6 max-w-7xl mx-auto -mt-16 flex flex-wrap gap-6 text-xs uppercase tracking-widest text-espresso/60">
+      <section className="pb-12 px-6 max-w-7xl mx-auto -mt-16 flex flex-wrap gap-6 text-xs uppercase tracking-widest text-espresso/60">
         <span>Lat -3.365532° &middot; Lon 35.672269°</span>
         <a
           href="https://www.google.com/maps/dir/?api=1&destination=-3.365532,35.672269"
@@ -94,6 +95,10 @@ function AboutPage() {
         >
           Open in Google Maps →
         </a>
+      </section>
+
+      <section className="pb-24 px-6 max-w-7xl mx-auto">
+        <DirectionsWidget />
       </section>
     </div>
   );
