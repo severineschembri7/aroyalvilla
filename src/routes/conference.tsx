@@ -42,7 +42,7 @@ function ConferencePage() {
               The Savannah Room
             </h1>
             <p className="mt-3 text-cream/80 max-w-[52ch]">
-              Karatu's premier conference facility — up to 150 delegates in a single hall, with
+              African Royal Villa's conference facility — up to 150 delegates in a single hall, with
               full AV, natural light, and a savannah view.
             </p>
           </div>

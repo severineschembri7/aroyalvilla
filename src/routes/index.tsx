@@ -28,11 +28,10 @@ function Index() {
 
         <div className="relative z-10 max-w-4xl animate-fade-up">
           <h1 className="font-serif text-5xl md:text-7xl text-cream leading-none mb-6 font-medium italic text-balance">
-            The hush of the crater's edge.
+            African Royal Villa — calm, crafted, and ready for your stay.
           </h1>
           <p className="text-cream/90 text-lg md:text-xl font-light tracking-wide max-w-[42ch] mx-auto text-pretty">
-            A grounded sanctuary positioned fifteen minutes from the Ngorongoro Conservation Area
-            gateway.
+            A boutique retreat on the Karatu highlands, designed for thoughtful stays, seamless arrivals, and effortless reservations.
           </p>
         </div>
 
@@ -158,7 +157,7 @@ function Index() {
               },
               {
                 tag: "Boutique Luxury",
-                quote: "Remarkable service and 15 minutes to the gate.",
+                quote: "Remarkable service and a calm retreat that feels like home.",
                 by: "Elena M., Italy",
               },
               {

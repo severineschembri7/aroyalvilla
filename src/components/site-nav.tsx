@@ -8,6 +8,7 @@ const links = [
   { to: "/about", label: "About" },
   { to: "/contact", label: "Contact" },
   { to: "/lookup", label: "My Booking" },
+  { to: "/portal", label: "Portal" },
 ] as const;
 
 export function SiteNav() {

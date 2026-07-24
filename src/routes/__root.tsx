@@ -75,7 +75,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
-export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+export const Route = createRootRouteWithContext<{ queryClient: QueryClient; runtime: string }>()({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
@@ -84,14 +84,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "Boutique safari lodge fifteen minutes from the Ngorongoro Conservation Area gateway. Direct booking, four room categories, 150-pax conference facility.",
+          "Boutique lodge and campsite in Karatu with a refined stay experience, direct booking, four room categories, and a 150-pax conference facility.",
       },
       { property: "og:site_name", content: "African Royal Villa & Campsite" },
       { property: "og:title", content: "African Royal Villa & Campsite" },
       {
         property: "og:description",
         content:
-          "Boutique safari lodge fifteen minutes from the Ngorongoro Conservation Area gateway.",
+          "Boutique lodge and campsite in Karatu offering refined stays, conferencing, and direct booking.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

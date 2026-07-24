@@ -1,8 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { rooms, findRoom, nightsBetween, availabilityFor } from "@/lib/rooms";
-import { createBooking } from "@/lib/bookings";
 import { useHolds } from "@/hooks/use-holds";
+import { createBookingServer } from "@/lib/bookings.functions";
 
 type Search = {
   roomId?: string;
@@ -79,18 +79,21 @@ function BookPage() {
     setError(null);
     setSubmitting(true);
     try {
-      const booking = await createBooking({
-        roomId: room.id,
-        roomName: room.name,
-        checkIn,
-        checkOut,
-        guests,
-        nights,
-        ratePerNight: room.rate,
-        addons,
-        total,
-        guest,
-        paymentMethod: payment,
+      const booking = await createBookingServer({
+        data: {
+          roomId: room.id,
+          roomName: room.name,
+          checkIn,
+          checkOut,
+          guests,
+          nights,
+          ratePerNight: room.rate,
+          addons,
+          total,
+          guest,
+          paymentMethod: payment,
+          source: "website",
+        },
       });
       navigate({ to: "/book/confirmation", search: { ref: booking.reference } });
     } catch (e) {

@@ -9,7 +9,7 @@ export function SiteFooter() {
             African Royal Villa
           </div>
           <p className="text-sm text-espresso/60 mb-8">
-            Located in Karatu, the highland gateway between Lake Manyara and the Ngorongoro
+            Located in Karatu, the highland base between Lake Manyara and the Ngorongoro
             Conservation Area.
           </p>
           <div className="flex gap-4">

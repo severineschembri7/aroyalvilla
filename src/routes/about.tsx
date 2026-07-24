@@ -9,7 +9,7 @@ export const Route = createFileRoute("/about")({
       {
         name: "description",
         content:
-          "Our story, and how to find us: fifteen minutes from the Ngorongoro Conservation Area gateway, twenty from Lake Manyara.",
+          "Our story, and how to find us: a boutique retreat in the Karatu highlands with easy access to the Ngorongoro area and Lake Manyara.",
       },
       { property: "og:title", content: "About & Location — African Royal Villa" },
       { property: "og:url", content: "/about" },
@@ -31,7 +31,7 @@ function AboutPage() {
               Our story
             </span>
             <h1 className="mt-2 font-serif text-5xl md:text-6xl text-cream font-medium italic">
-              A quieter Karatu
+              African Royal Villa &amp; Campsite
             </h1>
           </div>
         </div>
@@ -44,9 +44,7 @@ function AboutPage() {
           two decades, into a boutique lodge — but the pace never changed.
         </p>
         <p>
-          We're fifteen minutes from the Ngorongoro Conservation Area gate and twenty from Lake
-          Manyara. Most of our guests use us as the pause on either side of a long safari day;
-          many come back to hold conferences and weddings in the Savannah Room.
+          Our setting along the Karatu highlands gives guests a peaceful pause before or after safari adventures. The property is equally suited to restorative stays, conferences, and celebrations in the Savannah Room.
         </p>
         <p>
           The staff who greet you today are, in most cases, the same people who greeted you the
