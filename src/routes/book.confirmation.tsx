@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import { STATUS_LABEL, type BookingStatus } from "@/lib/bookings";
 import { useBookingStatus } from "@/hooks/use-holds";
+import { getBookingSummary } from "@/lib/bookings.functions";
 
 type PublicBooking = {
   reference: string;
@@ -38,11 +38,7 @@ function ConfirmationPage() {
     if (!ref) return;
     let cancelled = false;
     void (async () => {
-      const { data } = await supabase
-        .from("bookings")
-        .select("reference, room_name, check_in, check_out, guests, nights, total, payment_method, status")
-        .eq("reference", ref)
-        .maybeSingle();
+      const data = await getBookingSummary({ data: { ref } });
       if (!cancelled && data) setBooking(data as PublicBooking);
     })();
     return () => {
