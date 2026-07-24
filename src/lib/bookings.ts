@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { lookupBookingFn } from "./bookings.functions";
 
 export type BookingStatus =
   | "pending"
@@ -86,13 +87,7 @@ export async function lookupBooking(
   email: string,
   phone: string,
 ): Promise<StoredBooking | null> {
-  const { data, error } = await supabase.rpc("lookup_booking", {
-    _reference: reference,
-    _email: email,
-    _phone: phone,
-  });
-  if (error) throw error;
-  const row = Array.isArray(data) ? data[0] : data;
+  const row = await lookupBookingFn({ data: { reference, email, phone } });
   if (!row) return null;
   return {
     reference: row.reference,
