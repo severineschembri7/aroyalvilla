@@ -72,9 +72,28 @@ function AboutPage() {
             </div>
           </div>
         </div>
-        <div className="aspect-video bg-sage/20 rounded-2xl grid place-items-center text-espresso/50 font-serif italic">
-          Map placeholder
+        <div className="aspect-video rounded-2xl overflow-hidden border border-espresso/10">
+          <iframe
+            title="African Royal Villa location — Karatu, Tanzania"
+            src="https://www.google.com/maps?q=-3.365532,35.672269&z=15&output=embed"
+            className="w-full h-full"
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            allowFullScreen
+          />
         </div>
+      </section>
+
+      <section className="pb-24 px-6 max-w-7xl mx-auto -mt-16 flex flex-wrap gap-6 text-xs uppercase tracking-widest text-espresso/60">
+        <span>Lat -3.365532° &middot; Lon 35.672269°</span>
+        <a
+          href="https://www.google.com/maps/dir/?api=1&destination=-3.365532,35.672269"
+          target="_blank"
+          rel="noreferrer"
+          className="text-terracotta hover:text-espresso font-semibold"
+        >
+          Open in Google Maps →
+        </a>
       </section>
     </div>
   );
