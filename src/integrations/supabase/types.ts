@@ -111,29 +111,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      lookup_booking: {
-        Args: { _email: string; _phone: string; _reference: string }
-        Returns: {
-          addons: string[]
-          check_in: string
-          check_out: string
-          created_at: string
-          email: string
-          first_name: string
-          guests: number
-          last_name: string
-          nights: number
-          payment_method: string
-          phone: string
-          rate_per_night: number
-          reference: string
-          room_id: string
-          room_name: string
-          status: Database["public"]["Enums"]["booking_status"]
-          total: number
-          updated_at: string
-        }[]
-      }
+      [_ in never]: never
     }
     Enums: {
       booking_status:
