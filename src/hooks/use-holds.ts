@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import type { Hold } from "@/lib/rooms";
+import { getRoomHolds, getBookingSummary } from "@/lib/bookings.functions";
 
 // Live-syncing list of every booking's (room_id, dates, status).
 // No PII is exposed by this table's RLS.
@@ -10,42 +10,33 @@ export function useHolds(): { holds: Hold[]; loading: boolean } {
 
   useEffect(() => {
     let cancelled = false;
-
     const load = async () => {
-      const today = new Date();
-      today.setDate(today.getDate() - 1);
-      const { data } = await supabase
-        .from("bookings")
-        .select("room_id, check_in, check_out, status")
-        .gte("check_out", today.toISOString().slice(0, 10));
-      if (!cancelled && data) {
-        setHolds(data as Hold[]);
-        setLoading(false);
+      try {
+        const data = await getRoomHolds();
+        if (!cancelled) {
+          setHolds(data as Hold[]);
+          setLoading(false);
+        }
+      } catch {
+        if (!cancelled) setLoading(false);
       }
     };
     void load();
-
-    const channel = supabase
-      .channel("bookings-availability")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "bookings" },
-        () => {
-          void load();
-        },
-      )
-      .subscribe();
-
+    const interval = setInterval(load, 30_000);
+    const onFocus = () => void load();
+    window.addEventListener("focus", onFocus);
     return () => {
       cancelled = true;
-      supabase.removeChannel(channel);
+      clearInterval(interval);
+      window.removeEventListener("focus", onFocus);
     };
   }, []);
 
   return { holds, loading };
 }
 
-// Subscribe to status/details of a single booking reference in real time.
+// Poll status/details of a single booking reference. The reference acts as a bearer
+// token — enumeration is bounded by its entropy and no PII is returned.
 export function useBookingStatus(reference: string | undefined) {
   const [status, setStatus] = useState<string | null>(null);
   const [updatedAt, setUpdatedAt] = useState<string | null>(null);
@@ -53,41 +44,25 @@ export function useBookingStatus(reference: string | undefined) {
   useEffect(() => {
     if (!reference) return;
     let cancelled = false;
-
     const load = async () => {
-      const { data } = await supabase
-        .from("bookings")
-        .select("status, updated_at")
-        .eq("reference", reference)
-        .maybeSingle();
-      if (!cancelled && data) {
-        setStatus(data.status);
-        setUpdatedAt(data.updated_at);
+      try {
+        const data = await getBookingSummary({ data: { ref: reference } });
+        if (!cancelled && data) {
+          setStatus(data.status);
+          setUpdatedAt(data.updated_at);
+        }
+      } catch {
+        // ignore
       }
     };
     void load();
-
-    const channel = supabase
-      .channel(`booking-${reference}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "UPDATE",
-          schema: "public",
-          table: "bookings",
-          filter: `reference=eq.${reference}`,
-        },
-        (payload) => {
-          const row = payload.new as { status: string; updated_at: string };
-          setStatus(row.status);
-          setUpdatedAt(row.updated_at);
-        },
-      )
-      .subscribe();
-
+    const interval = setInterval(load, 15_000);
+    const onFocus = () => void load();
+    window.addEventListener("focus", onFocus);
     return () => {
       cancelled = true;
-      supabase.removeChannel(channel);
+      clearInterval(interval);
+      window.removeEventListener("focus", onFocus);
     };
   }, [reference]);
 
