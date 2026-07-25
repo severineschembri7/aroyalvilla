@@ -1,4 +1,5 @@
 const BOOTSTRAP_SQL = `
+CREATE EXTENSION IF NOT EXISTS btree_gist;
 CREATE TYPE IF NOT EXISTS public.booking_status AS ENUM ('pending','confirmed','checked_in','checked_out','cancelled');
 
 CREATE TABLE IF NOT EXISTS public.bookings (
@@ -17,6 +18,17 @@ CREATE TABLE IF NOT EXISTS public.bookings (
   created_at timestamptz NOT NULL DEFAULT now(),
   updated_at timestamptz NOT NULL DEFAULT now()
 );
+
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'bookings_room_date_exclusion') THEN
+    ALTER TABLE public.bookings
+    ADD CONSTRAINT bookings_room_date_exclusion EXCLUDE USING gist (
+      room_id WITH =,
+      daterange(check_in, check_out, '[)') WITH &&
+    ) WHERE (status <> 'cancelled');
+  END IF;
+END $$;
 
 ALTER TABLE public.bookings ENABLE ROW LEVEL SECURITY;
 

@@ -134,6 +134,8 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const router = useRouter();
+  const isSystemRoute = router.state.location.pathname.startsWith("/system");
 
   useEffect(() => {
     void ensureSupabaseSchema();
@@ -142,12 +144,12 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <div className="min-h-screen bg-cream text-espresso font-sans flex flex-col">
-        <SiteNav />
+        {!isSystemRoute && <SiteNav />}
         <main className="flex-1">
           <Outlet />
         </main>
-        <SiteFooter />
-        <WhatsAppFAB />
+        {!isSystemRoute && <SiteFooter />}
+        {!isSystemRoute && <WhatsAppFAB />}
       </div>
     </QueryClientProvider>
   );
