@@ -4,25 +4,12 @@ import type { Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { listStaffUsers, updateStaffRole } from "@/lib/staff.functions";
 
-export const Route = createFileRoute("/system")({
+export const Route = createFileRoute("/system/staff")({
   head: () => ({
     meta: [{ title: "African Royal Villa — System" }],
   }),
   component: SystemDashboard,
 });
-
-type BookingRow = {
-  reference: string;
-  room_name: string;
-  check_in: string;
-  check_out: string;
-  guests: number;
-  status: string;
-  total: number;
-  created_at: string;
-};
-
-type AuthMode = "signin" | "signup";
 
 type StaffUser = {
   id: string;
@@ -31,6 +18,8 @@ type StaffUser = {
   lastSignInAt: string | null;
   role: string;
 };
+
+type AuthMode = "signin" | "signup";
 
 type StaffNavItem = {
   label: string;
@@ -41,13 +30,8 @@ type StaffNavItem = {
 const systemNavItems: StaffNavItem[] = [
   { label: "Dashboard", id: "dashboard" },
   { label: "Reservations", id: "reservations" },
-  { label: "Restaurant & Bar", id: "restaurant" },
-  { label: "Billing & Invoicing", id: "billing" },
-  { label: "HR & Staff", id: "hr", roles: ["management", "admin"] },
-  { label: "Reports", id: "reports", roles: ["management", "admin"] },
+  { label: "Staff", id: "staff", roles: ["management", "admin"] },
 ];
-
-const appBaseUrl = import.meta.env.VITE_SYSTEM_BASE_URL ?? "";
 
 const approvedStaffRoles = (import.meta.env.VITE_APPROVED_STAFF_ROLES ?? "staff,admin")
   .split(",")
@@ -96,7 +80,7 @@ function SystemShell({
   userRole,
   isManagement,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   userName: string;
   userRole: string;
   isManagement: boolean;
@@ -125,7 +109,7 @@ function SystemShell({
             {navItems.map((item) => (
               <a
                 key={item.id}
-                href={`${appBaseUrl ? appBaseUrl : ""}#${item.id}`}
+                href={`#${item.id}`}
                 className="text-sm font-medium text-slate-700 transition hover:text-slate-900"
               >
                 {item.label}
@@ -452,244 +436,61 @@ function SystemDashboard() {
   return (
     <SystemShell userName={staffName} userRole={staffRole} isManagement={isManagement}>
       <div id="dashboard" className="space-y-8">
-        <div className="grid gap-6 xl:grid-cols-[1.4fr_0.6fr]">
-          <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <div>
-                <p className="text-xs uppercase tracking-[0.3em] text-slate-500">Today at a glance</p>
-                <h1 className="mt-3 text-3xl font-semibold text-slate-900">Front desk & reservations</h1>
-              </div>
-              <div className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-slate-700">
-                Live sync
-              </div>
-            </div>
-
-            <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-              {[
-                { label: "Occupancy", value: "82%" },
-                { label: "Arrivals", value: "6" },
-                { label: "Departures", value: "3" },
-                { label: "F&B revenue", value: "$4,280" },
-              ].map((item) => (
-                <div key={item.label} className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
-                  <p className="text-xs uppercase tracking-[0.3em] text-slate-500">{item.label}</p>
-                  <p className="mt-3 text-3xl font-semibold text-slate-900">{item.value}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-            <p className="text-xs uppercase tracking-[0.3em] text-slate-500">Operations pulse</p>
-            <h2 className="mt-3 text-2xl font-semibold text-slate-900">Room states & priorities</h2>
-            <div className="mt-6 space-y-3">
-              {[
-                { label: "Room prep", value: "Garden view · quiet" },
-                { label: "Dining notes", value: "Allergy flag active" },
-                { label: "Billing", value: "Deposit pending" },
-              ].map((item) => (
-                <div key={item.label} className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
-                  <p className="text-sm font-semibold text-slate-900">{item.label}</p>
-                  <p className="mt-1 text-sm text-slate-600">{item.value}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <section id="reservations" className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+        <section id="staff" className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <p className="text-xs uppercase tracking-[0.3em] text-slate-500">Reservations</p>
-              <h2 className="mt-3 text-2xl font-semibold text-slate-900">Latest bookings</h2>
+              <p className="text-xs uppercase tracking-[0.3em] text-slate-500">Staff management</p>
+              <h2 className="mt-3 text-2xl font-semibold text-slate-900">Approve staff and assign roles</h2>
             </div>
-            <div className="text-sm text-slate-600">Auto-updating feed from website bookings</div>
+            <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-slate-700">
+              Management only
+            </span>
           </div>
-          <div className="mt-6 overflow-x-auto">
-            <table className="min-w-full text-left text-sm text-slate-700">
-              <thead className="border-b border-slate-200 text-slate-500">
-                <tr>
-                  <th className="px-4 py-3">Reference</th>
-                  <th className="px-4 py-3">Room</th>
-                  <th className="px-4 py-3">Dates</th>
-                  <th className="px-4 py-3">Guests</th>
-                  <th className="px-4 py-3">Status</th>
-                  <th className="px-4 py-3">Value</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-200">
-                {loading ? (
-                  <tr>
-                    <td className="px-4 py-6 text-slate-500" colSpan={6}>
-                      Loading reservations…
-                    </td>
-                  </tr>
-                ) : bookings.length === 0 ? (
-                  <tr>
-                    <td className="px-4 py-6 text-slate-500" colSpan={6}>
-                      No reservations yet.
-                    </td>
-                  </tr>
-                ) : (
-                  bookings.map((booking) => (
-                    <tr key={booking.reference} className="hover:bg-slate-50">
-                      <td className="px-4 py-3 font-medium text-slate-900">{booking.reference}</td>
-                      <td className="px-4 py-3">{booking.room_name}</td>
-                      <td className="px-4 py-3">{booking.check_in} → {booking.check_out}</td>
-                      <td className="px-4 py-3">{booking.guests}</td>
-                      <td className="px-4 py-3 text-slate-600">{booking.status}</td>
-                      <td className="px-4 py-3">${booking.total}</td>
+
+          <div className="mt-6 space-y-4">
+            {staffLoading ? (
+              <p className="text-sm text-slate-500">Loading staff users…</p>
+            ) : (
+              <div className="overflow-x-auto rounded-3xl border border-slate-200 bg-slate-50 p-3">
+                <table className="min-w-full text-left text-sm text-slate-700">
+                  <thead className="border-b border-slate-200 text-slate-500">
+                    <tr>
+                      <th className="px-4 py-3">Email</th>
+                      <th className="px-4 py-3">Role</th>
+                      <th className="px-4 py-3">Last login</th>
+                      <th className="px-4 py-3">Actions</th>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        </section>
-
-        {isManagement ? (
-          <section id="staff" className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <p className="text-xs uppercase tracking-[0.3em] text-slate-500">Staff management</p>
-                <h2 className="mt-3 text-2xl font-semibold text-slate-900">Approve staff and assign roles</h2>
-              </div>
-              <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-slate-700">
-                Management only
-              </span>
-            </div>
-
-            <div className="mt-6 space-y-4">
-              {staffLoading ? (
-                <p className="text-sm text-slate-500">Loading staff users…</p>
-              ) : (
-                <div className="overflow-x-auto rounded-3xl border border-slate-200 bg-slate-50 p-3">
-                  <table className="min-w-full text-left text-sm text-slate-700">
-                    <thead className="border-b border-slate-200 text-slate-500">
-                      <tr>
-                        <th className="px-4 py-3">Email</th>
-                        <th className="px-4 py-3">Role</th>
-                        <th className="px-4 py-3">Last login</th>
-                        <th className="px-4 py-3">Actions</th>
+                  </thead>
+                  <tbody className="divide-y divide-slate-200">
+                    {staffUsers.map((user) => (
+                      <tr key={user.id}> 
+                        <td className="px-4 py-3">{user.email ?? "Unknown"}</td>
+                        <td className="px-4 py-3">{user.role}</td>
+                        <td className="px-4 py-3">{user.lastSignInAt ?? "Never"}</td>
+                        <td className="px-4 py-3">
+                          <select
+                            value={user.role}
+                            onChange={(event) => handleRoleChange(user.id, event.target.value)}
+                            className="rounded-2xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none"
+                          >
+                            <option value="none">None</option>
+                            <option value="staff">Staff</option>
+                            <option value="management">Management</option>
+                            <option value="admin">Admin</option>
+                          </select>
+                        </td>
                       </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-200">
-                      {staffUsers.map((user) => (
-                        <tr key={user.id}>
-                          <td className="px-4 py-3">{user.email ?? "Unknown"}</td>
-                          <td className="px-4 py-3">{user.role}</td>
-                          <td className="px-4 py-3">{user.lastSignInAt ?? "Never"}</td>
-                          <td className="px-4 py-3">
-                            <select
-                              value={user.role}
-                              onChange={(event) => handleRoleChange(user.id, event.target.value)}
-                              className="rounded-2xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none"
-                            >
-                              <option value="none">None</option>
-                              <option value="staff">Staff</option>
-                              <option value="management">Management</option>
-                              <option value="admin">Admin</option>
-                            </select>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </div>
-
-            {updateStatus ? (
-              <p className="mt-4 rounded-2xl bg-slate-100 px-4 py-3 text-sm text-slate-700">{updateStatus}</p>
-            ) : null}
-          </section>
-        ) : null}
-
-        <section id="restaurant" className="grid gap-6 xl:grid-cols-3">
-          <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm xl:col-span-2">
-            <p className="text-xs uppercase tracking-[0.3em] text-slate-500">Restaurant & Bar</p>
-            <h2 className="mt-3 text-2xl font-semibold text-slate-900">Service status</h2>
-            <div className="mt-6 space-y-3">
-              {[
-                { label: "Table service", value: "8 active orders" },
-                { label: "Kitchen tickets", value: "3 awaiting prep" },
-                { label: "Guest alerts", value: "2 dietary flags" },
-              ].map((item) => (
-                <div key={item.label} className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
-                  <p className="font-semibold text-slate-900">{item.label}</p>
-                  <p className="mt-1 text-sm text-slate-600">{item.value}</p>
-                </div>
-              ))}
-            </div>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
-          <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-            <p className="text-xs uppercase tracking-[0.3em] text-slate-500">Guest-aware actions</p>
-            <h3 className="mt-3 text-xl font-semibold text-slate-900">Charge to room</h3>
-            <p className="mt-2 text-sm text-slate-600">
-              Select a booking to add bar or restaurant charges directly to the guest folio.
-            </p>
-            <button className="mt-6 w-full rounded-2xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">
-              Open folio panel
-            </button>
-          </div>
+          {updateStatus ? (
+            <p className="mt-4 rounded-2xl bg-slate-100 px-4 py-3 text-sm text-slate-700">{updateStatus}</p>
+          ) : null}
         </section>
-
-        <section id="billing" className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-          <p className="text-xs uppercase tracking-[0.3em] text-slate-500">Billing & Invoicing</p>
-          <h2 className="mt-3 text-2xl font-semibold text-slate-900">Revenue snapshot</h2>
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              { label: "Daily revenue", value: "$8,420" },
-              { label: "ADR", value: "$210" },
-              { label: "RevPAR", value: "$172" },
-              { label: "F&B revenue", value: "$4,280" },
-            ].map((item) => (
-              <div key={item.label} className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
-                <p className="text-xs uppercase tracking-[0.3em] text-slate-500">{item.label}</p>
-                <p className="mt-3 text-3xl font-semibold text-slate-900">{item.value}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {isManagement ? (
-          <>
-            <section id="hr" className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-              <p className="text-xs uppercase tracking-[0.3em] text-slate-500">HR & Staff</p>
-              <h2 className="mt-3 text-2xl font-semibold text-slate-900">Team roster</h2>
-              <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {[
-                  { name: "Martha", role: "Front desk" },
-                  { name: "Juma", role: "Food & Beverage" },
-                  { name: "Amina", role: "Housekeeping" },
-                ].map((member) => (
-                  <div key={member.name} className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
-                    <p className="font-semibold text-slate-900">{member.name}</p>
-                    <p className="mt-1 text-sm text-slate-600">{member.role}</p>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            <section id="reports" className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-              <p className="text-xs uppercase tracking-[0.3em] text-slate-500">Reports</p>
-              <h2 className="mt-3 text-2xl font-semibold text-slate-900">Management summaries</h2>
-              <div className="mt-6 space-y-4">
-                {[
-                  { title: "Occupancy trend", detail: "3-day lookahead" },
-                  { title: "Revenue mix", detail: "Rooms vs F&B vs extras" },
-                  { title: "Staff utilization", detail: "Shift coverage is 94%" },
-                ].map((item) => (
-                  <div key={item.title} className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
-                    <p className="font-semibold text-slate-900">{item.title}</p>
-                    <p className="mt-1 text-sm text-slate-600">{item.detail}</p>
-                  </div>
-                ))}
-              </div>
-            </section>
-          </>
-        ) : null}
       </div>
     </SystemShell>
   );

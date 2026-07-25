@@ -22,6 +22,7 @@ import { Route as RoomsRouteImport } from './routes/rooms'
 import { Route as SystemRouteImport } from './routes/system'
 import { Route as BookConfirmationRouteImport } from './routes/book.confirmation'
 import { Route as RoomsRoomIdRouteImport } from './routes/rooms.$roomId'
+import { Route as SystemStaffRouteImport } from './routes/system.staff'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -88,6 +89,11 @@ const RoomsRoomIdRoute = RoomsRoomIdRouteImport.update({
   path: '/$roomId',
   getParentRoute: () => RoomsRoute,
 } as any)
+const SystemStaffRoute = SystemStaffRouteImport.update({
+  id: '/staff',
+  path: '/staff',
+  getParentRoute: () => SystemRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -100,9 +106,10 @@ export interface FileRoutesByFullPath {
   '/lookup': typeof LookupRoute
   '/portal': typeof PortalRoute
   '/rooms': typeof RoomsRouteWithChildren
-  '/system': typeof SystemRoute
+  '/system': typeof SystemRouteWithChildren
   '/book/confirmation': typeof BookConfirmationRoute
   '/rooms/$roomId': typeof RoomsRoomIdRoute
+  '/system/staff': typeof SystemStaffRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -115,9 +122,10 @@ export interface FileRoutesByTo {
   '/lookup': typeof LookupRoute
   '/portal': typeof PortalRoute
   '/rooms': typeof RoomsRouteWithChildren
-  '/system': typeof SystemRoute
+  '/system': typeof SystemRouteWithChildren
   '/book/confirmation': typeof BookConfirmationRoute
   '/rooms/$roomId': typeof RoomsRoomIdRoute
+  '/system/staff': typeof SystemStaffRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -131,9 +139,10 @@ export interface FileRoutesById {
   '/lookup': typeof LookupRoute
   '/portal': typeof PortalRoute
   '/rooms': typeof RoomsRouteWithChildren
-  '/system': typeof SystemRoute
+  '/system': typeof SystemRouteWithChildren
   '/book/confirmation': typeof BookConfirmationRoute
   '/rooms/$roomId': typeof RoomsRoomIdRoute
+  '/system/staff': typeof SystemStaffRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -151,6 +160,7 @@ export interface FileRouteTypes {
     | '/system'
     | '/book/confirmation'
     | '/rooms/$roomId'
+    | '/system/staff'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -166,6 +176,7 @@ export interface FileRouteTypes {
     | '/system'
     | '/book/confirmation'
     | '/rooms/$roomId'
+    | '/system/staff'
   id:
     | '__root__'
     | '/'
@@ -181,6 +192,7 @@ export interface FileRouteTypes {
     | '/system'
     | '/book/confirmation'
     | '/rooms/$roomId'
+    | '/system/staff'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -194,7 +206,7 @@ export interface RootRouteChildren {
   LookupRoute: typeof LookupRoute
   PortalRoute: typeof PortalRoute
   RoomsRoute: typeof RoomsRouteWithChildren
-  SystemRoute: typeof SystemRoute
+  SystemRoute: typeof SystemRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -290,6 +302,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RoomsRoomIdRouteImport
       parentRoute: typeof RoomsRoute
     }
+    '/system/staff': {
+      id: '/system/staff'
+      path: '/staff'
+      fullPath: '/system/staff'
+      preLoaderRoute: typeof SystemStaffRouteImport
+      parentRoute: typeof SystemRoute
+    }
   }
 }
 
@@ -313,6 +332,17 @@ const RoomsRouteChildren: RoomsRouteChildren = {
 
 const RoomsRouteWithChildren = RoomsRoute._addFileChildren(RoomsRouteChildren)
 
+interface SystemRouteChildren {
+  SystemStaffRoute: typeof SystemStaffRoute
+}
+
+const SystemRouteChildren: SystemRouteChildren = {
+  SystemStaffRoute: SystemStaffRoute,
+}
+
+const SystemRouteWithChildren =
+  SystemRoute._addFileChildren(SystemRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
@@ -324,7 +354,7 @@ const rootRouteChildren: RootRouteChildren = {
   LookupRoute: LookupRoute,
   PortalRoute: PortalRoute,
   RoomsRoute: RoomsRouteWithChildren,
-  SystemRoute: SystemRoute,
+  SystemRoute: SystemRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
