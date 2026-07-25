@@ -93,7 +93,7 @@ export const createStaffAccount = createServerFn({ method: "POST" })
 
 export const listStaffProfiles = createServerFn({ method: "GET" }).handler(async () => {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-  const { data, error } = await supabaseAdmin.from("staff_profiles").select("*”).order("created_at", { ascending: false });
+  const { data, error } = await supabaseAdmin.from("staff_profiles").select("*").order("created_at", { ascending: false });
   if (error) throw error;
   return data ?? [];
 });
@@ -113,6 +113,30 @@ export const upsertStaffProfile = createServerFn({ method: "POST" })
       { onConflict: "user_id" },
     );
     if (error) throw error;
+    return { ok: true };
+  });
+
+export const updateStaffRole = createServerFn({ method: "POST" })
+  .validator(z.object({ id: z.string().min(1), role: z.string().min(1) }))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(data.id, {
+      user_metadata: { role: data.role },
+      app_metadata: { role: data.role },
+    });
+    if (updateError) throw updateError;
+
+    const { error: profileError } = await supabaseAdmin.from("staff_profiles").upsert(
+      {
+        user_id: data.id,
+        role: data.role,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "user_id" },
+    );
+    if (profileError) throw profileError;
+
     return { ok: true };
   });
 
