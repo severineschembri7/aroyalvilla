@@ -14,6 +14,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteNav } from "../components/site-nav";
 import { SiteFooter } from "../components/site-footer";
 import { WhatsAppFAB } from "../components/whatsapp-fab";
+import { ensureSupabaseSchema } from "@/integrations/supabase/bootstrap";
 
 function NotFoundComponent() {
   return (
@@ -133,6 +134,10 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+
+  useEffect(() => {
+    void ensureSupabaseSchema();
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
