@@ -5,13 +5,13 @@ import { DirectionsWidget } from "@/components/directions-widget";
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "About & Location — African Royal Villa" },
+      { title: "About & Location — Africa Royal Villa" },
       {
         name: "description",
         content:
           "Our story, and how to find us: a boutique retreat in the Karatu highlands with easy access to the Ngorongoro area and Lake Manyara.",
       },
-      { property: "og:title", content: "About & Location — African Royal Villa" },
+      { property: "og:title", content: "About & Location — Africa Royal Villa" },
       { property: "og:url", content: "/about" },
     ],
     links: [{ rel: "canonical", href: "/about" }],
@@ -31,7 +31,7 @@ function AboutPage() {
               Our story
             </span>
             <h1 className="mt-2 font-serif text-5xl md:text-6xl text-cream font-medium italic">
-              African Royal Villa &amp; Campsite
+              Africa Royal Villa &amp; Campsite
             </h1>
           </div>
         </div>
@@ -39,7 +39,7 @@ function AboutPage() {
 
       <section className="py-16 px-6 max-w-4xl mx-auto space-y-6 text-lg text-espresso/80 leading-relaxed">
         <p>
-          African Royal Villa &amp; Campsite began as a working farm on the edge of the Karatu
+          Africa Royal Villa &amp; Campsite began as a working farm on the edge of the Karatu
           highlands. What started as a handful of rondavels for family and friends grew, over
           two decades, into a boutique lodge — but the pace never changed.
         </p>
@@ -73,7 +73,7 @@ function AboutPage() {
         </div>
         <div className="aspect-video rounded-2xl overflow-hidden border border-espresso/10">
           <iframe
-            title="African Royal Villa location — Karatu, Tanzania"
+            title="Africa Royal Villa location — Karatu, Tanzania"
             src="https://www.google.com/maps?q=-3.365532,35.672269&z=15&output=embed"
             className="w-full h-full"
             loading="lazy"

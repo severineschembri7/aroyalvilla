@@ -2,6 +2,7 @@ import { createStart, createMiddleware } from "@tanstack/react-start";
 
 import { renderErrorPage } from "./lib/error-page";
 import { attachSupabaseAuth } from "@/integrations/supabase/auth-attacher";
+import { ensureSupabaseSchema } from "@/integrations/supabase/bootstrap";
 
 const errorMiddleware = createMiddleware().server(async ({ next }) => {
   try {
@@ -18,7 +19,12 @@ const errorMiddleware = createMiddleware().server(async ({ next }) => {
   }
 });
 
+const schemaBootstrapMiddleware = createMiddleware().server(async ({ next }) => {
+  await ensureSupabaseSchema();
+  return next();
+});
+
 export const startInstance = createStart(() => ({
   functionMiddleware: [attachSupabaseAuth],
-  requestMiddleware: [errorMiddleware],
+  requestMiddleware: [errorMiddleware, schemaBootstrapMiddleware],
 }));

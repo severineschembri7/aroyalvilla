@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { normalizeRole, roleLabel } from "@/lib/permissions";
 
 export const Route = createFileRoute("/system")({
-  head: () => ({ meta: [{ title: "African Royal Villa — Operations" }] }),
+  head: () => ({ meta: [{ title: "Africa Royal Villa — Operations" }] }),
   component: SystemPage,
 });
 
@@ -232,7 +232,7 @@ function SystemPage() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-lg font-semibold text-slate-900">Operations Console</h1>
-              <p className="text-xs text-slate-500">African Royal Villa</p>
+              <p className="text-xs text-slate-500">Africa Royal Villa</p>
             </div>
             <div className="flex items-center gap-4">
               <div className="hidden md:flex items-center gap-2 text-sm">

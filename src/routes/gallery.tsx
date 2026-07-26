@@ -25,12 +25,12 @@ const images: { src: string; alt: string; cat: Exclude<Cat, "all"> }[] = [
 export const Route = createFileRoute("/gallery")({
   head: () => ({
     meta: [
-      { title: "Gallery — African Royal Villa" },
+      { title: "Gallery — Africa Royal Villa" },
       {
         name: "description",
-        content: "Photographs of African Royal Villa: rooms, grounds, dining and conference spaces.",
+        content: "Photographs of Africa Royal Villa: rooms, grounds, dining and conference spaces.",
       },
-      { property: "og:title", content: "Gallery — African Royal Villa" },
+      { property: "og:title", content: "Gallery — Africa Royal Villa" },
       { property: "og:url", content: "/gallery" },
     ],
     links: [{ rel: "canonical", href: "/gallery" }],

@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { normalizeRole } from "@/lib/permissions";
 
 export const Route = createFileRoute("/login")({
-  head: () => ({ meta: [{ title: "African Royal Villa — Staff Login" }] }),
+  head: () => ({ meta: [{ title: "Africa Royal Villa — Staff Login" }] }),
   component: LoginPage,
 });
 
@@ -87,7 +87,16 @@ function LoginPage() {
         .single();
 
       if (profileError || !staffProfile) {
-        setError("Staff account not found. Please contact management.");
+        const isSchemaIssue =
+          profileError?.message?.includes("Could not find the table") ||
+          profileError?.message?.includes("relation") ||
+          profileError?.message?.includes("does not exist");
+
+        setError(
+          isSchemaIssue
+            ? "The staff operations database is not ready yet. Please contact management to complete setup."
+            : "Staff account not found. Please contact management."
+        );
         await supabase.auth.signOut();
         setLoading(false);
         return;
@@ -116,7 +125,7 @@ function LoginPage() {
           {/* Header */}
           <div className="mb-8 text-center">
             <div className="text-sm uppercase tracking-widest text-slate-500 mb-2">
-              African Royal Villa
+              Africa Royal Villa
             </div>
             <h1 className="text-2xl font-bold text-slate-900 mb-1">
               Operations Console

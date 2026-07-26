@@ -4,13 +4,13 @@ import { useState } from "react";
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact — African Royal Villa" },
+      { title: "Contact — Africa Royal Villa" },
       {
         name: "description",
         content:
-          "Reach the African Royal Villa front desk directly by phone, email or WhatsApp.",
+          "Reach the Africa Royal Villa front desk directly by phone, email or WhatsApp.",
       },
-      { property: "og:title", content: "Contact — African Royal Villa" },
+      { property: "og:title", content: "Contact — Africa Royal Villa" },
       { property: "og:url", content: "/contact" },
     ],
     links: [{ rel: "canonical", href: "/contact" }],
@@ -40,7 +40,7 @@ function ContactPage() {
           </div>
           <div>
             <dt className="text-xs uppercase tracking-widest text-espresso/40">Email</dt>
-            <dd className="mt-1 text-lg">hello@africanroyalvilla.com</dd>
+            <dd className="mt-1 text-lg">hello@Africaroyalvilla.com</dd>
           </div>
           <div>
             <dt className="text-xs uppercase tracking-widest text-espresso/40">Address</dt>

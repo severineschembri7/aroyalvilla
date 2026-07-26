@@ -5,17 +5,17 @@ import barImg from "@/assets/bar.jpg";
 export const Route = createFileRoute("/dining")({
   head: () => ({
     meta: [
-      { title: "Restaurant & Bar — African Royal Villa" },
+      { title: "Restaurant & Bar — Africa Royal Villa" },
       {
         name: "description",
         content:
-          "Slow-cooked East African cuisine and a candlelit bar under thatched rafters — open to guests and outside visitors in Karatu.",
+          "Slow-cooked East Africa cuisine and a candlelit bar under thatched rafters — open to guests and outside visitors in Karatu.",
       },
-      { property: "og:title", content: "Restaurant & Bar — African Royal Villa" },
+      { property: "og:title", content: "Restaurant & Bar — Africa Royal Villa" },
       {
         property: "og:description",
         content:
-          "Slow-cooked East African cuisine and a candlelit bar under thatched rafters — open to guests and outside visitors in Karatu.",
+          "Slow-cooked East Africa cuisine and a candlelit bar under thatched rafters — open to guests and outside visitors in Karatu.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -57,7 +57,7 @@ const BAR = [
   { name: "Konyagi & tonic", note: "Tanzania's spirit, cucumber, lime" },
   { name: "Dawa cocktail", note: "vodka, honey, lime, crushed ice" },
   { name: "Serengeti & Kilimanjaro lagers", note: "on tap, always cold" },
-  { name: "South African & European wine list", note: "by the glass or bottle" },
+  { name: "South Africa & European wine list", note: "by the glass or bottle" },
   { name: "Fresh juices & mocktails", note: "passion, mango, tamarind, ginger" },
 ];
 
@@ -67,7 +67,7 @@ function DiningPage() {
       <section className="relative h-[55vh] min-h-[420px]">
         <img
           src={diningImg}
-          alt="Candlelit restaurant at African Royal Villa"
+          alt="Candlelit restaurant at Africa Royal Villa"
           className="w-full h-full object-cover"
           width={1024}
           height={1024}
@@ -151,7 +151,7 @@ function DiningPage() {
       <section className="py-16 px-6 max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center">
         <img
           src={barImg}
-          alt="The bar at African Royal Villa"
+          alt="The bar at Africa Royal Villa"
           className="w-full h-[480px] object-cover"
           loading="lazy"
           width={1024}

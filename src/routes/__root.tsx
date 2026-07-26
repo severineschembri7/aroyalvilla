@@ -14,7 +14,6 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteNav } from "../components/site-nav";
 import { SiteFooter } from "../components/site-footer";
 import { WhatsAppFAB } from "../components/whatsapp-fab";
-import { ensureSupabaseSchema } from "@/integrations/supabase/bootstrap";
 
 function NotFoundComponent() {
   return (
@@ -81,14 +80,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient; runt
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "African Royal Villa & Campsite — Boutique Lodge in Karatu, Tanzania" },
+      { title: "Africa Royal Villa & Campsite — Boutique Lodge in Karatu, Tanzania" },
       {
         name: "description",
         content:
           "Boutique lodge and campsite in Karatu with a refined stay experience, direct booking, four room categories, and a 150-pax conference facility.",
       },
-      { property: "og:site_name", content: "African Royal Villa & Campsite" },
-      { property: "og:title", content: "African Royal Villa & Campsite" },
+      { property: "og:site_name", content: "Africa Royal Villa & Campsite" },
+      { property: "og:title", content: "Africa Royal Villa & Campsite" },
       {
         property: "og:description",
         content:
@@ -136,10 +135,6 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
   const isSystemRoute = router.state.location.pathname.startsWith("/system");
-
-  useEffect(() => {
-    void ensureSupabaseSchema();
-  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

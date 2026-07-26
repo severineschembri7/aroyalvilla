@@ -9,14 +9,14 @@ export const Route = createFileRoute("/lookup")({
   }),
   head: () => ({
     meta: [
-      { title: "Find Your Booking — African Royal Villa" },
+      { title: "Find Your Booking — Africa Royal Villa" },
       {
         name: "description",
         content:
-          "Look up your African Royal Villa reservation with your booking reference, email and phone number. See live status updates.",
+          "Look up your Africa Royal Villa reservation with your booking reference, email and phone number. See live status updates.",
       },
-      { property: "og:title", content: "Find Your Booking — African Royal Villa" },
-      { property: "og:description", content: "Real-time status for your reservation at African Royal Villa, Karatu." },
+      { property: "og:title", content: "Find Your Booking — Africa Royal Villa" },
+      { property: "og:description", content: "Real-time status for your reservation at Africa Royal Villa, Karatu." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -62,7 +62,7 @@ function LookupPage() {
 
   const waHref = booking
     ? `https://wa.me/255759533491?text=${encodeURIComponent(
-        `Hello African Royal Villa, this is ${booking.guest.firstName} ${booking.guest.lastName}. I'd like to ask about my booking ${booking.reference} (${booking.roomName}, ${booking.checkIn} → ${booking.checkOut}).`,
+        `Hello Africa Royal Villa, this is ${booking.guest.firstName} ${booking.guest.lastName}. I'd like to ask about my booking ${booking.reference} (${booking.roomName}, ${booking.checkIn} → ${booking.checkOut}).`,
       )}`
     : `https://wa.me/255759533491`;
 
