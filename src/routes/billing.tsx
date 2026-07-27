@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { getCurrentStaffSession, listBillingItems, recordPayment } from "@/lib/ops-store";
 
 export const Route = createFileRoute("/billing")({
   head: () => ({ meta: [{ title: "Billing — Operations" }] }),
@@ -25,48 +25,25 @@ function BillingPage() {
   const [message, setMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    const init = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) {
-        navigate({ to: "/login" });
-        return;
-      }
+    const session = getCurrentStaffSession();
+    if (!session) {
+      navigate({ to: "/login" });
+      return;
+    }
 
-      const { data, error } = await supabase.from("billing_items").select("*").order("created_at", { ascending: false });
-      if (error) {
-        console.error(error);
-        setLoading(false);
-        return;
-      }
-      setItems((data ?? []) as Item[]);
-      setLoading(false);
-    };
-    init();
+    setItems(listBillingItems() as Item[]);
+    setLoading(false);
   }, [navigate]);
 
-  const submitPayment = async () => {
+  const submitPayment = () => {
     setMessage(null);
     if (!reference || amount <= 0) {
       setMessage("Provide booking reference and positive amount");
       return;
     }
 
-    const { error } = await supabase.from("billing_items").insert({
-      booking_reference: reference,
-      description: "Payment received",
-      amount: -Math.abs(amount),
-      kind: "payment",
-      created_at: new Date().toISOString(),
-    });
-
-    if (error) {
-      setMessage(error.message);
-      return;
-    }
-
-    // refresh
-    const { data } = await supabase.from("billing_items").select("*").order("created_at", { ascending: false });
-    setItems((data ?? []) as Item[]);
+    recordPayment({ bookingReference: reference, amount });
+    setItems(listBillingItems() as Item[]);
     setMessage("Payment recorded");
     setReference("");
     setAmount(0);
@@ -74,7 +51,6 @@ function BillingPage() {
 
   if (loading) return <div className="p-6">Loading billing…</div>;
 
-  // Compute totals by booking
   const totals: Record<string, number> = {};
   for (const it of items) {
     const k = it.booking_reference ?? "unassigned";

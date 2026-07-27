@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { createStaffAccount, listStaffProfiles } from "@/lib/staff.functions";
+import { createLocalStaffAccount } from "@/lib/ops-store";
 
 export const Route = createFileRoute("/staff/new")({
   head: () => ({ meta: [{ title: "Register Staff — Operations" }] }),
@@ -17,24 +17,13 @@ function StaffNewPage() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
-  const submit = async () => {
+  const submit = () => {
     setMessage(null);
     setLoading(true);
-    try {
-      await createStaffAccount({ email, password, fullName, role, department });
-      setMessage("Staff account created");
-      // Refresh staff list
-      try {
-        await listStaffProfiles();
-      } catch (e) {
-        // ignore
-      }
-      setLoading(false);
-      navigate({ to: "/system" });
-    } catch (e) {
-      setMessage(e instanceof Error ? e.message : "Failed to create staff");
-      setLoading(false);
-    }
+    const account = createLocalStaffAccount({ email, password, fullName, role, department });
+    setMessage(`Staff account created for ${account.email}`);
+    setLoading(false);
+    navigate({ to: "/system" });
   };
 
   return (

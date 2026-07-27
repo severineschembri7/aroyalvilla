@@ -1,7 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { normalizeRole } from "@/lib/permissions";
+import { getCurrentStaffSession, listReservations } from "@/lib/ops-store";
 
 export const Route = createFileRoute("/calendar")({
   head: () => ({ meta: [{ title: "Calendar — Operations" }] }),
@@ -24,34 +23,18 @@ function CalendarPage() {
   const [bookings, setBookings] = useState<Booking[]>([]);
 
   useEffect(() => {
-    const init = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) {
-        navigate({ to: "/login" });
-        return;
-      }
+    const session = getCurrentStaffSession();
+    if (!session) {
+      navigate({ to: "/login" });
+      return;
+    }
 
-      const { data, error } = await supabase
-        .from("bookings")
-        .select("reference,room_name,check_in,check_out,guests,status,guest_name")
-        .order("check_in", { ascending: true });
-
-      if (error) {
-        console.error(error);
-        setLoading(false);
-        return;
-      }
-
-      setBookings((data ?? []) as Booking[]);
-      setLoading(false);
-    };
-
-    init();
+    setBookings(listReservations() as Booking[]);
+    setLoading(false);
   }, [navigate]);
 
   if (loading) return <div className="p-6">Loading calendar…</div>;
 
-  // Group by check_in date
   const groups: Record<string, Booking[]> = {};
   for (const b of bookings) {
     const date = b.check_in?.split("T")[0] ?? "unknown";

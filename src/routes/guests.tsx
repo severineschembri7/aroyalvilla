@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { getCurrentStaffSession, listReservations } from "@/lib/ops-store";
 
 export const Route = createFileRoute("/guests")({
   head: () => ({ meta: [{ title: "Guests — Operations" }] }),
@@ -9,7 +9,7 @@ export const Route = createFileRoute("/guests")({
 
 type Guest = {
   id?: string;
-  reference?: string;
+  booking_reference?: string;
   guest_name?: string;
   email?: string;
   phone?: string;
@@ -23,27 +23,22 @@ function GuestsPage() {
   const [query, setQuery] = useState("");
 
   useEffect(() => {
-    const init = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) {
-        navigate({ to: "/login" });
-        return;
-      }
+    const session = getCurrentStaffSession();
+    if (!session) {
+      navigate({ to: "/login" });
+      return;
+    }
 
-      // Try to list a guest-like table; fall back to bookings if none
-      const { data: fromGuests } = await supabase.from("booking_guests").select("id,booking_reference:booking_reference,guest_name,email,phone,created_at").order("created_at", { ascending: false });
-      if (fromGuests && fromGuests.length > 0) {
-        setGuests(fromGuests as any);
-        setLoading(false);
-        return;
-      }
-
-      const { data: fromBookings } = await supabase.from("bookings").select("reference as booking_reference, guest_name, email, phone, created_at").order("created_at", { ascending: false });
-      setGuests((fromBookings ?? []) as any);
-      setLoading(false);
-    };
-
-    init();
+    const reservations = listReservations() as any[];
+    setGuests(reservations.map((item) => ({
+      id: item.reference,
+      booking_reference: item.reference,
+      guest_name: item.guest_name,
+      email: item.email,
+      phone: item.phone,
+      created_at: item.created_at,
+    })));
+    setLoading(false);
   }, [navigate]);
 
   const filtered = guests.filter((g) => {
