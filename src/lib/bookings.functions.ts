@@ -286,7 +286,7 @@ export const createBookingServer = createServerFn({ method: "POST" })
     });
     if (guestError) throw guestError;
 
-    const confirmation = await triggerConfirmation(reference, {
+    await triggerConfirmation(reference, {
       ...bookingPayload,
       guest_email: data.guest.email,
       guest_phone: data.guest.phone,
@@ -307,7 +307,6 @@ export const createBookingServer = createServerFn({ method: "POST" })
       source: data.source,
       status: "pending",
       createdAt: new Date().toISOString(),
-      confirmation,
     };
   });
 
