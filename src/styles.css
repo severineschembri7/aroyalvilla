@@ -4,7 +4,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Brand tokens for AfricanRoyal Villa & Campsite */
+/* Brand tokens for African Royal Villa & Campsite */
 @theme {
   --color-espresso: #3B2A22;
   --color-terracotta: #B85042;

@@ -58,7 +58,7 @@ const emptyProfile = (): GuestPayload => ({
 export const Route = createFileRoute("/portal")({
   head: () => ({
     meta: [
-      { title: "Guest Portal — AfricanRoyal Villa" },
+      { title: "Guest Portal — African Royal Villa" },
       {
         name: "description",
         content: "Manage your stay preferences, booking history, and arrival details in one place.",
@@ -138,7 +138,7 @@ function PortalPage() {
       <section className="bg-espresso text-cream px-6 py-20">
         <div className="mx-auto max-w-7xl">
           <p className="text-xs uppercase tracking-[0.35em] text-gold">Guest portal</p>
-          <h1 className="mt-4 font-serif text-4xl md:text-5xl">Welcome back to AfricanRoyal Villa</h1>
+          <h1 className="mt-4 font-serif text-4xl md:text-5xl">Welcome back to African Royal Villa</h1>
           <p className="mt-4 max-w-3xl text-lg text-cream/80">
             Your preferences, dining notes, and stay history travel with you so the team can anticipate your needs.
           </p>

@@ -18,7 +18,7 @@ function Index() {
         <div className="absolute inset-0 z-0">
           <img
             src={heroImg}
-            alt="Sunset view from AfricanRoyal Villa over the Karatu highlands toward the Ngorongoro rim"
+            alt="Sunset view from African Royal Villa over the Karatu highlands toward the Ngorongoro rim"
             width={1920}
             height={1080}
             className="w-full h-full object-cover"
@@ -28,7 +28,7 @@ function Index() {
 
         <div className="relative z-10 max-w-4xl animate-fade-up">
           <h1 className="font-serif text-5xl md:text-7xl text-cream leading-none mb-6 font-medium italic text-balance">
-            AfricanRoyal Villa — calm, crafted, and ready for your stay.
+            African Royal Villa — calm, crafted, and ready for your stay.
           </h1>
           <p className="text-cream/90 text-lg md:text-xl font-light tracking-wide max-w-[42ch] mx-auto text-pretty">
             A boutique retreat on the Karatu highlands, designed for thoughtful stays, seamless arrivals, and effortless reservations.
@@ -66,7 +66,7 @@ function Index() {
               <div className="aspect-[2/3] rounded-[12px] overflow-hidden mb-4 outline-1 -outline-offset-1 outline-black/5">
                 <img
                   src={room.image}
-                  alt={`${room.name} interior at AfricanRoyal Villa`}
+                  alt={`${room.name} interior at African Royal Villa`}
                   width={600}
                   height={900}
                   loading="lazy"

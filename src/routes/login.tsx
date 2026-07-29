@@ -3,7 +3,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/login")({
-  head: () => ({ meta: [{ title: "AfricanRoyal Villa — Staff Login" }] }),
+  head: () => ({ meta: [{ title: "African Royal Villa — Staff Login" }] }),
   component: LoginPage,
 });
 
@@ -80,7 +80,7 @@ function LoginPage() {
       <div className="w-full max-w-md">
         <div className="bg-white rounded-2xl shadow-2xl p-8">
           <div className="mb-8 text-center">
-            <div className="text-sm uppercase tracking-widest text-slate-500 mb-2">AfricanRoyal Villa</div>
+            <div className="text-sm uppercase tracking-widest text-slate-500 mb-2">African Royal Villa</div>
             <h1 className="text-2xl font-bold text-slate-900 mb-1">Staff Operations Console</h1>
             <p className="text-sm text-slate-600">Front desk and staff access only</p>
           </div>

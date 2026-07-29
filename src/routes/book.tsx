@@ -27,7 +27,7 @@ export const Route = createFileRoute("/book")({
   }),
   head: () => ({
     meta: [
-      { title: "Book Your Stay — AfricanRoyal Villa" },
+      { title: "Book Your Stay — African Royal Villa" },
       { name: "robots", content: "noindex" },
     ],
   }),

@@ -38,6 +38,10 @@ const preferenceSaveSchema = z.object({
   phone: z.string().min(4).max(40),
   preferences: z.record(z.unknown()),
 });
+const statusUpdateSchema = z.object({
+  reference: z.string().min(4).max(32),
+  status: z.enum(["pending", "confirmed", "checked_in", "checked_out", "cancelled"]),
+});
 
 function generateReference(): string {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -57,8 +61,63 @@ function buildConfirmationPayload(reference: string, booking: Record<string, unk
   };
 }
 
+// Stubbed email sender. Logs a fully-rendered email preview to the server
+// console so bookings and status changes can be observed end-to-end without
+// real provider credentials. Swap this for a real transport later.
+function logEmailStub(
+  kind: "booking_confirmation" | "status_change",
+  to: string,
+  subject: string,
+  body: string,
+) {
+  const divider = "=".repeat(60);
+  // eslint-disable-next-line no-console
+  console.log(
+    `\n${divider}\n[email:stub] ${kind}\nTo: ${to}\nFrom: African Royal Villa <hello@aroyalvilla.com>\nSubject: ${subject}\n\n${body}\n${divider}\n`,
+  );
+}
+
+function statusChangeCopy(status: string, reference: string, roomName: string) {
+  switch (status) {
+    case "confirmed":
+      return `Great news — your reservation ${reference} for ${roomName} is now CONFIRMED. We look forward to welcoming you to African Royal Villa.`;
+    case "checked_in":
+      return `Welcome! Your stay for ${reference} (${roomName}) is now checked in. Karibu sana.`;
+    case "checked_out":
+      return `Thank you for staying with African Royal Villa. Your reservation ${reference} is checked out. We would love to host you again.`;
+    case "cancelled":
+      return `Your reservation ${reference} (${roomName}) has been cancelled. If this was unexpected, please reply to this email or WhatsApp us on +255 759 533 491.`;
+    default:
+      return `Your reservation ${reference} (${roomName}) status was updated to: ${status}.`;
+  }
+}
+
 async function triggerConfirmation(reference: string, booking: Record<string, unknown>) {
   const payload = buildConfirmationPayload(reference, booking);
+  const guestEmail = (booking.guest_email as string) ?? "guest@example.com";
+  const roomName = (booking.room_name as string) ?? "your room";
+  const checkIn = booking.check_in;
+  const checkOut = booking.check_out;
+  const total = booking.total;
+  logEmailStub(
+    "booking_confirmation",
+    guestEmail,
+    `Booking received: ${reference}`,
+    [
+      `Asante for booking with African Royal Villa & Campsite.`,
+      ``,
+      `Reference: ${reference}`,
+      `Room:      ${roomName}`,
+      `Check-in:  ${checkIn}`,
+      `Check-out: ${checkOut}`,
+      `Total:     $${total}`,
+      ``,
+      `Your reservation is currently PENDING and will be confirmed by our`,
+      `front desk shortly. Reply to this email or WhatsApp +255 759 533 491`,
+      `for anything at all.`,
+    ].join("\n"),
+  );
+
   const resendKey = process.env.RESEND_API_KEY;
   const twilioSid = process.env.TWILIO_ACCOUNT_SID;
   const twilioToken = process.env.TWILIO_AUTH_TOKEN;
@@ -73,10 +132,10 @@ async function triggerConfirmation(reference: string, booking: Record<string, un
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: "AfricanRoyal Villa <hello@aroyalvilla.com>",
+          from: "African Royal Villa <hello@aroyalvilla.com>",
           to: [booking.guest_email ?? "hello@aroyalvilla.com"],
           subject: `Booking confirmed: ${reference}`,
-          html: `<p>Your stay at AfricanRoyal Villa is confirmed.</p><p>Reference: ${reference}</p>`,
+          html: `<p>Your stay at African Royal Villa is confirmed.</p><p>Reference: ${reference}</p>`,
         }),
       });
     } catch {
@@ -95,7 +154,7 @@ async function triggerConfirmation(reference: string, booking: Record<string, un
         body: new URLSearchParams({
           From: twilioNumber,
           To: `whatsapp:${booking.guest_phone ?? ""}`,
-          Body: `Your reservation ${reference} is confirmed at AfricanRoyal Villa.`,
+          Body: `Your reservation ${reference} is confirmed at African Royal Villa.`,
         }),
       });
     } catch {
@@ -105,6 +164,40 @@ async function triggerConfirmation(reference: string, booking: Record<string, un
 
   return payload;
 }
+
+// Dashboard/back-office status transitions. Updates the booking row and
+// emits a stubbed status-change email so the guest is kept in the loop.
+export const updateBookingStatus = createServerFn({ method: "POST" })
+  .validator((data: unknown) => statusUpdateSchema.parse(data))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const reference = data.reference.toUpperCase();
+    const { data: updated, error } = await supabaseAdmin
+      .from("bookings")
+      .update({ status: data.status, updated_at: new Date().toISOString() })
+      .eq("reference", reference)
+      .select("reference, room_name, check_in, check_out, status")
+      .maybeSingle();
+    if (error) throw error;
+    if (!updated) throw new Error("Booking not found");
+
+    const { data: guest } = await supabaseAdmin
+      .from("booking_guests")
+      .select("first_name, email")
+      .eq("reference", reference)
+      .maybeSingle();
+
+    const to = guest?.email ?? "guest@example.com";
+    const greeting = guest?.first_name ? `Hi ${guest.first_name},` : "Hello,";
+    logEmailStub(
+      "status_change",
+      to,
+      `Booking ${reference}: ${data.status.replace("_", " ")}`,
+      [greeting, "", statusChangeCopy(data.status, reference, updated.room_name)].join("\n"),
+    );
+
+    return { reference, status: updated.status };
+  });
 
 // Public availability: only room_id, dates and non-cancelled status for future stays.
 // No PII, no pricing, no reference. Safe for anonymous polling.
@@ -193,7 +286,7 @@ export const createBookingServer = createServerFn({ method: "POST" })
     });
     if (guestError) throw guestError;
 
-    const confirmation = await triggerConfirmation(reference, {
+    await triggerConfirmation(reference, {
       ...bookingPayload,
       guest_email: data.guest.email,
       guest_phone: data.guest.phone,
@@ -214,7 +307,6 @@ export const createBookingServer = createServerFn({ method: "POST" })
       source: data.source,
       status: "pending",
       createdAt: new Date().toISOString(),
-      confirmation,
     };
   });
 

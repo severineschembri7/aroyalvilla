@@ -6,7 +6,7 @@ import { listStaffUsers, updateStaffRole } from "@/lib/staff.functions";
 
 export const Route = createFileRoute("/system/staff")({
   head: () => ({
-    meta: [{ title: "AfricanRoyal Villa — System" }],
+    meta: [{ title: "African Royal Villa — System" }],
   }),
   component: SystemDashboard,
 });
@@ -100,7 +100,7 @@ function SystemShell({
               ARV System
             </div>
             <div className="space-y-1 text-sm">
-              <div className="font-semibold">AfricanRoyal Villa — System</div>
+              <div className="font-semibold">African Royal Villa — System</div>
               <div className="text-slate-500">Staff operations workspace</div>
             </div>
           </div>

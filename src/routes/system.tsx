@@ -4,7 +4,7 @@ import { getCurrentStaffSession, signOutStaff } from "@/lib/ops-store";
 import { roleLabel } from "@/lib/permissions";
 
 export const Route = createFileRoute("/system")({
-  head: () => ({ meta: [{ title: "AfricanRoyal Villa — Operations" }] }),
+  head: () => ({ meta: [{ title: "African Royal Villa — Operations" }] }),
   component: SystemPage,
 });
 

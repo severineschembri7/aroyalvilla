@@ -5,13 +5,13 @@ import barImg from "@/assets/bar.jpg";
 export const Route = createFileRoute("/dining")({
   head: () => ({
     meta: [
-      { title: "Restaurant & Bar — AfricanRoyal Villa" },
+      { title: "Restaurant & Bar — African Royal Villa" },
       {
         name: "description",
         content:
           "Slow-cooked East Africancuisine and a candlelit bar under thatched rafters — open to guests and outside visitors in Karatu.",
       },
-      { property: "og:title", content: "Restaurant & Bar — AfricanRoyal Villa" },
+      { property: "og:title", content: "Restaurant & Bar — African Royal Villa" },
       {
         property: "og:description",
         content:
@@ -67,7 +67,7 @@ function DiningPage() {
       <section className="relative h-[55vh] min-h-[420px]">
         <img
           src={diningImg}
-          alt="Candlelit restaurant at AfricanRoyal Villa"
+          alt="Candlelit restaurant at African Royal Villa"
           className="w-full h-full object-cover"
           width={1024}
           height={1024}
@@ -151,7 +151,7 @@ function DiningPage() {
       <section className="py-16 px-6 max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center">
         <img
           src={barImg}
-          alt="The bar at AfricanRoyal Villa"
+          alt="The bar at African Royal Villa"
           className="w-full h-[480px] object-cover"
           loading="lazy"
           width={1024}
