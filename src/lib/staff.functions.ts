@@ -27,6 +27,7 @@ const reservationDetailsSchema = z.object({
 const roomStatusSchema = z.object({
   roomId: z.string().min(1),
   status: z.enum(["available", "occupied", "dirty", "maintenance"]),
+  notes: z.string().optional().default(""),
 });
 
 const orderSchema = z.object({
@@ -39,11 +40,19 @@ const orderSchema = z.object({
 
 const staffProfileSchema = z.object({
   id: z.string().min(1),
+  email: z.string().email().optional(),
   fullName: z.string().min(1),
   role: z.enum(["front_desk", "restaurant_bar", "housekeeping", "management"]),
   department: z.string().min(1),
   active: z.boolean(),
 });
+
+function toStaffRole(role: string): "front_desk" | "restaurant_bar" | "housekeeping" | "management" {
+  if (role === "management" || role === "admin") return "management";
+  if (role === "restaurant_bar" || role === "restaurant" || role === "bar") return "restaurant_bar";
+  if (role === "housekeeping") return "housekeeping";
+  return "front_desk";
+}
 
 export const listStaffUsers = createServerFn({ method: "GET" }).handler(async () => {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -72,10 +81,11 @@ export const createStaffAccount = createServerFn({ method: "POST" })
     });
 
     if (error) throw error;
+    if (!created.user) throw new Error("Supabase did not return the created staff user.");
 
     const { error: profileError } = await supabaseAdmin.from("staff_profiles").upsert(
       {
-        user_id: created.user?.id,
+        user_id: created.user.id,
         full_name: data.fullName,
         email: data.email,
         role: data.role,
@@ -105,6 +115,7 @@ export const upsertStaffProfile = createServerFn({ method: "POST" })
     const { error } = await supabaseAdmin.from("staff_profiles").upsert(
       {
         user_id: data.id,
+        ...(data.email ? { email: data.email } : {}),
         full_name: data.fullName,
         role: data.role,
         department: data.department,
@@ -120,17 +131,18 @@ export const updateStaffRole = createServerFn({ method: "POST" })
   .validator(z.object({ id: z.string().min(1), role: z.string().min(1) }))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const staffRole = toStaffRole(data.role);
 
     const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(data.id, {
-      user_metadata: { role: data.role },
-      app_metadata: { role: data.role },
+      user_metadata: { role: staffRole },
+      app_metadata: { role: staffRole },
     });
     if (updateError) throw updateError;
 
     const { error: profileError } = await supabaseAdmin.from("staff_profiles").upsert(
       {
         user_id: data.id,
-        role: data.role,
+        role: staffRole,
         updated_at: new Date().toISOString(),
       },
       { onConflict: "user_id" },
@@ -142,12 +154,34 @@ export const updateStaffRole = createServerFn({ method: "POST" })
 
 export const listReservations = createServerFn({ method: "GET" }).handler(async () => {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-  const { data, error } = await supabaseAdmin
+  const { data: bookings, error } = await supabaseAdmin
     .from("bookings")
-    .select("reference, room_id, room_name, check_in, check_out, guests, status, total, created_at, payment_method, nights, reason")
+    .select("reference, room_id, room_name, check_in, check_out, guests, status, total, created_at, updated_at, payment_method, nights, reason")
     .order("created_at", { ascending: false });
   if (error) throw error;
-  return data ?? [];
+
+  const references = (bookings ?? []).map((booking) => booking.reference);
+  const { data: guests, error: guestError } = references.length
+    ? await supabaseAdmin
+        .from("booking_guests")
+        .select("reference, first_name, last_name, email, phone, country, requests")
+        .in("reference", references)
+    : { data: [], error: null };
+  if (guestError) throw guestError;
+
+  const guestsByReference = new Map((guests ?? []).map((guest) => [guest.reference, guest]));
+
+  return (bookings ?? []).map((booking) => {
+    const guest = guestsByReference.get(booking.reference);
+    return {
+      ...booking,
+      guest_name: guest ? `${guest.first_name} ${guest.last_name}`.trim() : "",
+      email: guest?.email ?? "",
+      phone: guest?.phone ?? "",
+      country: guest?.country ?? "",
+      requests: guest?.requests ?? "",
+    };
+  });
 });
 
 export const updateReservationStatus = createServerFn({ method: "POST" })
@@ -192,6 +226,7 @@ export const setRoomStatus = createServerFn({ method: "POST" })
     const { error } = await supabaseAdmin.from("room_statuses").upsert({
       room_id: data.roomId,
       status: data.status,
+      notes: data.notes,
       updated_at: new Date().toISOString(),
     }, { onConflict: "room_id" });
     if (error) throw error;
@@ -242,6 +277,56 @@ export const recordPayment = createServerFn({ method: "POST" })
       kind: "payment",
       created_at: new Date().toISOString(),
     });
+    if (error) throw error;
+    return { ok: true };
+  });
+
+
+export const listRestaurantOrders = createServerFn({ method: "GET" }).handler(async () => {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { data, error } = await supabaseAdmin
+    .from("restaurant_orders")
+    .select("id, booking_reference, guest_name, items, total, kind, status, created_at, updated_at")
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return data ?? [];
+});
+
+export const updateRestaurantOrderStatus = createServerFn({ method: "POST" })
+  .validator(z.object({ id: z.string().min(1), status: z.enum(["open", "preparing", "ready", "served", "closed"]) }))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin
+      .from("restaurant_orders")
+      .update({ status: data.status, updated_at: new Date().toISOString() })
+      .eq("id", data.id);
+    if (error) throw error;
+    return { ok: true };
+  });
+
+export const addBillingCharge = createServerFn({ method: "POST" })
+  .validator(z.object({ bookingReference: z.string().min(1), description: z.string().min(1), amount: z.number().positive(), kind: z.string().min(1) }))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin.from("billing_items").insert({
+      booking_reference: data.bookingReference,
+      description: data.description,
+      amount: data.amount,
+      kind: data.kind,
+      created_at: new Date().toISOString(),
+    });
+    if (error) throw error;
+    return { ok: true };
+  });
+
+export const setStaffActive = createServerFn({ method: "POST" })
+  .validator(z.object({ id: z.string().min(1), active: z.boolean() }))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin
+      .from("staff_profiles")
+      .update({ active: data.active, updated_at: new Date().toISOString() })
+      .eq("user_id", data.id);
     if (error) throw error;
     return { ok: true };
   });

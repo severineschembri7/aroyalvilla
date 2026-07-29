@@ -65,6 +65,7 @@ export type Database = {
           nights: number
           payment_method: string
           rate_per_night: number
+          reason: string | null
           reference: string
           room_id: string
           room_name: string
@@ -81,6 +82,7 @@ export type Database = {
           nights: number
           payment_method: string
           rate_per_night: number
+          reason?: string | null
           reference: string
           room_id: string
           room_name: string
@@ -97,6 +99,7 @@ export type Database = {
           nights?: number
           payment_method?: string
           rate_per_night?: number
+          reason?: string | null
           reference?: string
           room_id?: string
           room_name?: string
@@ -104,6 +107,69 @@ export type Database = {
           total?: number
           updated_at?: string
         }
+        Relationships: []
+      }
+      staff_profiles: {
+        Row: {
+          user_id: string
+          email: string
+          full_name: string
+          role: Database["public"]["Enums"]["staff_role"]
+          department: string
+          phone: string | null
+          active: boolean
+          hire_date: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          user_id: string
+          email: string
+          full_name: string
+          role: Database["public"]["Enums"]["staff_role"]
+          department: string
+          phone?: string | null
+          active?: boolean
+          hire_date?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          user_id?: string
+          email?: string
+          full_name?: string
+          role?: Database["public"]["Enums"]["staff_role"]
+          department?: string
+          phone?: string | null
+          active?: boolean
+          hire_date?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      room_statuses: {
+        Row: { room_id: string; status: Database["public"]["Enums"]["room_status_type"]; updated_by: string | null; notes: string | null; updated_at: string }
+        Insert: { room_id: string; status?: Database["public"]["Enums"]["room_status_type"]; updated_by?: string | null; notes?: string | null; updated_at?: string }
+        Update: { room_id?: string; status?: Database["public"]["Enums"]["room_status_type"]; updated_by?: string | null; notes?: string | null; updated_at?: string }
+        Relationships: []
+      }
+      billing_items: {
+        Row: { id: string; folio_id: string | null; booking_reference: string; description: string; amount: number; kind: string; created_at: string }
+        Insert: { id?: string; folio_id?: string | null; booking_reference: string; description: string; amount: number; kind: string; created_at?: string }
+        Update: { id?: string; folio_id?: string | null; booking_reference?: string; description?: string; amount?: number; kind?: string; created_at?: string }
+        Relationships: []
+      }
+      restaurant_orders: {
+        Row: { id: string; booking_reference: string; table_number: number | null; guest_name: string; items: string[]; status: Database["public"]["Enums"]["order_status_type"]; kind: string; total: number; created_by: string | null; created_at: string; updated_at: string }
+        Insert: { id?: string; booking_reference: string; table_number?: number | null; guest_name: string; items?: string[]; status?: Database["public"]["Enums"]["order_status_type"]; kind: string; total?: number; created_by?: string | null; created_at?: string; updated_at?: string }
+        Update: { id?: string; booking_reference?: string; table_number?: number | null; guest_name?: string; items?: string[]; status?: Database["public"]["Enums"]["order_status_type"]; kind?: string; total?: number; created_by?: string | null; created_at?: string; updated_at?: string }
+        Relationships: []
+      }
+      guest_profiles: {
+        Row: { id: string; email: string; phone: string | null; preferences: Json | null; created_at: string; updated_at: string }
+        Insert: { id?: string; email: string; phone?: string | null; preferences?: Json | null; created_at?: string; updated_at?: string }
+        Update: { id?: string; email?: string; phone?: string | null; preferences?: Json | null; created_at?: string; updated_at?: string }
         Relationships: []
       }
     }
@@ -120,6 +186,9 @@ export type Database = {
         | "checked_in"
         | "checked_out"
         | "cancelled"
+      staff_role: "front_desk" | "restaurant_bar" | "housekeeping" | "management"
+      room_status_type: "available" | "occupied" | "dirty" | "maintenance"
+      order_status_type: "open" | "preparing" | "ready" | "served" | "closed"
     }
     CompositeTypes: {
       [_ in never]: never

@@ -48,10 +48,11 @@ nano .env
 Add the Supabase/Lovable environment variables used by the project, for example:
 
 ```bash
+SUPABASE_URL=your_supabase_project_url
+SUPABASE_PUBLISHABLE_KEY=your_supabase_publishable_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 VITE_SUPABASE_URL=your_supabase_project_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-VITE_APPROVED_STAFF_EMAILS=manager@africanroyalvilla.co.tz
-VITE_APPROVED_STAFF_ROLES=staff,admin,management
+VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_publishable_key
 ```
 
 ## 4. Install, build, and run
