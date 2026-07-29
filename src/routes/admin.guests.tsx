@@ -4,6 +4,7 @@ import { listAllBookings } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/admin/guests")({ ssr: false, component: Guests });
 type Booking = Awaited<ReturnType<typeof listAllBookings>>[number];
+type Profile = { email: string; name: string; phone: string; country: string | null; bookings: Booking[]; totalSpend: number };
 
 function Guests() {
   const [rows, setRows] = useState<Booking[]>([]);
@@ -12,10 +13,10 @@ function Guests() {
     const load = async () => { const d = await listAllBookings(); if (!c) setRows(d as Booking[]); };
     void load(); const t = setInterval(load, 30000); return () => { c = true; clearInterval(t); }; }, []);
   const profiles = useMemo(() => {
-    const map = new Map<string, { email: string; name: string; phone: string; country: string | null; bookings: Booking[]; totalSpend: number }>();
+    const map = new Map<string, Profile>();
     for (const b of rows) { const g = b.guest; if (!g?.email) continue;
       const key = g.email.toLowerCase();
-      const p = map.get(key) ?? { email: g.email, name: `${g.first_name} ${g.last_name}`, phone: g.phone ?? "", country: g.country ?? null, bookings: [], totalSpend: 0 };
+      const p: Profile = map.get(key) ?? { email: g.email, name: `${g.first_name} ${g.last_name}`, phone: g.phone ?? "", country: g.country ?? null, bookings: [], totalSpend: 0 };
       p.bookings.push(b); if (b.status !== "cancelled") p.totalSpend += Number(b.total); map.set(key, p);
     }
     return [...map.values()].sort((a, b) => b.bookings.length - a.bookings.length);
