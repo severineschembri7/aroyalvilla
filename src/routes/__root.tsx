@@ -133,18 +133,16 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  const router = useRouter();
-  const isSystemRoute = router.state.location.pathname.startsWith("/system") || router.state.location.pathname.startsWith("/login");
 
   return (
     <QueryClientProvider client={queryClient}>
       <div className="min-h-screen bg-cream text-espresso font-sans flex flex-col">
-        {!isSystemRoute && <SiteNav />}
+        <SiteNav />
         <main className="flex-1">
           <Outlet />
         </main>
-        {!isSystemRoute && <SiteFooter />}
-        {!isSystemRoute && <WhatsAppFAB />}
+        <SiteFooter />
+        <WhatsAppFAB />
       </div>
     </QueryClientProvider>
   );
