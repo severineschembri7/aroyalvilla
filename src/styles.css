@@ -168,3 +168,35 @@
     color: var(--color-foreground);
   }
 }
+
+
+@layer components {
+  .field {
+    width: 100%;
+    border-radius: 0.5rem;
+    border: 1px solid rgb(203 213 225);
+    background: white;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    outline: none;
+  }
+
+  .field:focus {
+    border-color: rgb(15 23 42);
+    box-shadow: 0 0 0 2px rgb(15 23 42 / 0.12);
+  }
+
+  .primary {
+    border-radius: 0.5rem;
+    background: rgb(15 23 42);
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: white;
+    transition: background-color 150ms ease;
+  }
+
+  .primary:hover {
+    background: rgb(51 65 85);
+  }
+}
