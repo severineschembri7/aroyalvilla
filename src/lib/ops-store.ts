@@ -78,97 +78,18 @@ interface OpsStore {
 const STORAGE_KEY = "aroyalvilla_ops_store_v1";
 
 function buildDefaultStore(): OpsStore {
-  const now = new Date().toISOString();
-  const adminProfile: StaffProfileRecord = {
-    user_id: "local-admin",
-    email: "admin@aroyalvilla.com",
-    full_name: "System Administrator",
-    role: "management",
-    department: "Management",
-    active: true,
-    password: "admin1234",
-    created_at: now,
-    updated_at: now,
-  };
-
-  const reservations: ReservationRecord[] = [
-    {
-      reference: "ARV-1001",
-      room_id: "deluxe-suite",
-      room_name: "Deluxe Suite",
-      check_in: "2026-07-26",
-      check_out: "2026-07-28",
-      guests: 2,
-      nights: 2,
-      rate_per_night: 180,
-      addons: ["Breakfast"],
-      total: 360,
-      payment_method: "cash",
-      status: "pending",
-      reason: "",
-      guest_name: "Amina Hassan",
-      email: "amina@example.com",
-      phone: "+255 712 000 001",
-      created_at: now,
-      updated_at: now,
-    },
-    {
-      reference: "ARV-1002",
-      room_id: "family-room",
-      room_name: "Family Room",
-      check_in: "2026-07-27",
-      check_out: "2026-07-30",
-      guests: 4,
-      nights: 3,
-      rate_per_night: 160,
-      addons: ["Airport transfer"],
-      total: 480,
-      payment_method: "card",
-      status: "confirmed",
-      reason: "",
-      guest_name: "Daniel Mwangi",
-      email: "daniel@example.com",
-      phone: "+255 712 000 002",
-      created_at: now,
-      updated_at: now,
-    },
-    {
-      reference: "ARV-1003",
-      room_id: "garden-single",
-      room_name: "Garden Single",
-      check_in: "2026-07-25",
-      check_out: "2026-07-26",
-      guests: 1,
-      nights: 1,
-      rate_per_night: 120,
-      addons: [],
-      total: 120,
-      payment_method: "mobile_money",
-      status: "checked_in",
-      reason: "",
-      guest_name: "Grace Mlay",
-      email: "grace@example.com",
-      phone: "+255 712 000 003",
-      created_at: now,
-      updated_at: now,
-    },
-  ];
-
   return {
-    staffProfiles: [adminProfile],
-    reservations,
-    roomStatuses: [
-      { room_id: "deluxe-suite", status: "available", notes: "Ready for arrival", updated_at: now },
-      { room_id: "family-room", status: "occupied", notes: "Occupied by confirmed guest", updated_at: now },
-      { room_id: "garden-single", status: "dirty", notes: "Needs housekeeping", updated_at: now },
-    ],
-    billingItems: [
-      { id: "bill-1", booking_reference: "ARV-1001", description: "Room charge", amount: 360, kind: "room", created_at: now },
-      { id: "bill-2", booking_reference: "ARV-1002", description: "Room charge", amount: 480, kind: "room", created_at: now },
-    ],
+    staffProfiles: [],
+    reservations: [],
+    roomStatuses: [],
+    billingItems: [],
     restaurantOrders: [],
     currentSession: null,
   };
+}
+
+export function hasStaffProfiles() {
+  return readStore().staffProfiles.length > 0;
 }
 
 function readStore(): OpsStore {
@@ -415,4 +336,70 @@ export function recordPayment(input: { bookingReference: string; amount: number 
   store.billingItems = [item, ...store.billingItems];
   writeStore(store);
   return item;
+}
+
+export function listRestaurantOrders() {
+  return readStore().restaurantOrders.sort((a, b) => b.created_at.localeCompare(a.created_at));
+}
+
+export function updateRestaurantOrderStatus(input: { id: string; status: RestaurantOrderRecord["status"] }) {
+  const store = readStore();
+  const order = store.restaurantOrders.find((item) => item.id === input.id);
+  if (!order) return null;
+
+  order.status = input.status;
+  writeStore(store);
+  return order;
+}
+
+export function addBillingCharge(input: { bookingReference: string; description: string; amount: number; kind: string }) {
+  const store = readStore();
+  const item: BillingItemRecord = {
+    id: `bill-${Date.now()}`,
+    booking_reference: input.bookingReference,
+    description: input.description.trim(),
+    amount: Math.abs(input.amount),
+    kind: input.kind.trim() || "charge",
+    created_at: new Date().toISOString(),
+  };
+
+  store.billingItems = [item, ...store.billingItems];
+  writeStore(store);
+  return item;
+}
+
+export function updateRoomStatus(input: { roomId: string; status: RoomStatusRecord["status"]; notes?: string; updatedBy?: string }) {
+  const store = readStore();
+  const now = new Date().toISOString();
+  const existing = store.roomStatuses.find((item) => item.room_id === input.roomId);
+  const next = {
+    room_id: input.roomId.trim(),
+    status: input.status,
+    notes: input.notes?.trim(),
+    updated_by: input.updatedBy,
+    updated_at: now,
+  };
+
+  if (existing) {
+    Object.assign(existing, next);
+  } else {
+    store.roomStatuses = [next, ...store.roomStatuses];
+  }
+
+  writeStore(store);
+  return next;
+}
+
+export function setStaffActive(input: { id: string; active: boolean }) {
+  const store = readStore();
+  const profile = store.staffProfiles.find((item) => item.user_id === input.id);
+  if (!profile) return null;
+
+  profile.active = input.active;
+  profile.updated_at = new Date().toISOString();
+  if (!input.active && store.currentSession?.userId === input.id) {
+    store.currentSession = null;
+  }
+  writeStore(store);
+  return profile;
 }
