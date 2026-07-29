@@ -10,9 +10,9 @@ export const Route = createFileRoute("/rooms/$roomId")({
   head: ({ loaderData }) => ({
     meta: loaderData
       ? [
-          { title: `${loaderData.room.name} — Africa Royal Villa` },
+          { title: `${loaderData.room.name} — AfricanRoyal Villa` },
           { name: "description", content: loaderData.room.description },
-          { property: "og:title", content: `${loaderData.room.name} — Africa Royal Villa` },
+          { property: "og:title", content: `${loaderData.room.name} — AfricanRoyal Villa` },
           { property: "og:description", content: loaderData.room.description },
           { property: "og:url", content: `/rooms/${loaderData.room.id}` },
           { property: "og:image", content: loaderData.room.image },
@@ -41,7 +41,7 @@ function RoomDetail() {
       <section className="relative h-[60vh] min-h-[400px]">
         <img
           src={room.image}
-          alt={`${room.name} at Africa Royal Villa`}
+          alt={`${room.name} at AfricanRoyal Villa`}
           width={1200}
           height={800}
           className="w-full h-full object-cover"

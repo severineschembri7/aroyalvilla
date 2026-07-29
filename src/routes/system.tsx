@@ -39,7 +39,7 @@ import { hasPermission, navItemsForRole, normalizeRole, roleLabel, type StaffRol
 import { hasPermission, navItemsForRole, normalizeRole, roleLabel } from "@/lib/permissions";
 
 export const Route = createFileRoute("/system")({
-  head: () => ({ meta: [{ title: "Africa Royal Villa — Operations" }] }),
+  head: () => ({ meta: [{ title: "AfricanRoyal Villa — Operations" }] }),
   component: SystemPage,
 });
 
@@ -186,7 +186,7 @@ function SystemPage() {
       <header className="sticky top-0 z-10 border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-4">
           <div>
-            <h1 className="text-lg font-semibold">Africa Royal Villa Operations</h1>
+            <h1 className="text-lg font-semibold">AfricanRoyal Villa Operations</h1>
             <p className="text-xs text-slate-500">Live front desk dashboard connected to website bookings</p>
           </div>
           <div className="flex items-center gap-3 text-sm">
@@ -314,7 +314,7 @@ function SystemPage() {
     <div className="min-h-screen bg-slate-100 text-slate-900">
       <header className="sticky top-0 z-10 border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
-          <div><h1 className="text-lg font-semibold">Africa Royal Villa Operations</h1><p className="text-xs text-slate-500">Reservation, rooms, folio, F&B, staff command center</p></div>
+          <div><h1 className="text-lg font-semibold">AfricanRoyal Villa Operations</h1><p className="text-xs text-slate-500">Reservation, rooms, folio, F&B, staff command center</p></div>
           <div className="flex items-center gap-3 text-sm"><span>{session.fullName}</span><span className="rounded bg-slate-100 px-2 py-1 text-xs font-semibold">{roleLabel(role)}</span><button onClick={() => { signOutStaff(); navigate({ to: "/login" }); }} className="text-slate-600 hover:text-slate-900">Sign Out</button></div>
         </div>
       </header>
@@ -374,4 +374,4 @@ function FormGrid({ children }: { children: ReactNode }) { return <div className
 function Notice({ type, text }: { type: "success" | "error"; text: string }) { return <div className={`mb-4 rounded border p-3 text-sm ${type === "success" ? "border-green-200 bg-green-50 text-green-800" : "border-red-200 bg-red-50 text-red-800"}`}>{text}</div>; }
 function EmptyAware({ show, text }: { show: boolean; text: string }) { return show ? <div className="rounded border border-dashed bg-slate-50 p-6 text-sm text-slate-600">{text}</div> : null; }
 function PageCenter({ children }: { children: ReactNode }) { return <div className="flex min-h-screen items-center justify-center bg-slate-50 text-slate-600">{children}</div>; }
-function AuthPanel({ title, subtitle, children }: { title: string; subtitle: string; children: ReactNode }) { return <div className="flex min-h-screen items-center justify-center bg-slate-950 px-4"><div className="w-full max-w-md rounded-xl bg-white p-8 shadow-xl"><p className="mb-2 text-xs uppercase tracking-[0.3em] text-slate-500">Africa Royal Villa</p><h1 className="text-2xl font-bold">{title}</h1><p className="mb-6 mt-2 text-sm text-slate-600">{subtitle}</p><div className="space-y-3">{children}</div></div></div>; }
+function AuthPanel({ title, subtitle, children }: { title: string; subtitle: string; children: ReactNode }) { return <div className="flex min-h-screen items-center justify-center bg-slate-950 px-4"><div className="w-full max-w-md rounded-xl bg-white p-8 shadow-xl"><p className="mb-2 text-xs uppercase tracking-[0.3em] text-slate-500">AfricanRoyal Villa</p><h1 className="text-2xl font-bold">{title}</h1><p className="mb-6 mt-2 text-sm text-slate-600">{subtitle}</p><div className="space-y-3">{children}</div></div></div>; }

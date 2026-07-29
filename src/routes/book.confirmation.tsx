@@ -22,7 +22,7 @@ export const Route = createFileRoute("/book/confirmation")({
   }),
   head: () => ({
     meta: [
-      { title: "Booking Confirmed — Africa Royal Villa" },
+      { title: "Booking Confirmed — AfricanRoyal Villa" },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -48,7 +48,7 @@ function ConfirmationPage() {
 
   const status = (liveStatus as BookingStatus | null) ?? booking?.status ?? "pending";
   const waHref = `https://wa.me/255759533491?text=${encodeURIComponent(
-    `Hello Africa Royal Villa, I'd like to ask about my booking ${ref}.`,
+    `Hello AfricanRoyal Villa, I'd like to ask about my booking ${ref}.`,
   )}`;
 
   return (

@@ -4,13 +4,13 @@ import { useState } from "react";
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact — Africa Royal Villa" },
+      { title: "Contact — AfricanRoyal Villa" },
       {
         name: "description",
         content:
-          "Reach the Africa Royal Villa front desk directly by phone, email or WhatsApp.",
+          "Reach the AfricanRoyal Villa front desk directly by phone, email or WhatsApp.",
       },
-      { property: "og:title", content: "Contact — Africa Royal Villa" },
+      { property: "og:title", content: "Contact — AfricanRoyal Villa" },
       { property: "og:url", content: "/contact" },
     ],
     links: [{ rel: "canonical", href: "/contact" }],
@@ -31,7 +31,7 @@ function ContactPage() {
         </h1>
         <p className="text-espresso/70 mb-10 max-w-[42ch]">
           For same-day questions, WhatsApp is fastest — our reception answers between 06:00 and
-          22:00 East Africa Time.
+          22:00 East AfricanTime.
         </p>
         <dl className="space-y-6 text-sm">
           <div>

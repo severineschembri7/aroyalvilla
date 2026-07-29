@@ -19,13 +19,13 @@ export const Route = createFileRoute("/rooms")({
   }),
   head: () => ({
     meta: [
-      { title: "Rooms & Rates — Africa Royal Villa" },
+      { title: "Rooms & Rates — AfricanRoyal Villa" },
       {
         name: "description",
         content:
-          "Four distinct room categories at Africa Royal Villa in Karatu: Deluxe, Family, Twin and Garden Single. Check live availability and book direct.",
+          "Four distinct room categories at AfricanRoyal Villa in Karatu: Deluxe, Family, Twin and Garden Single. Check live availability and book direct.",
       },
-      { property: "og:title", content: "Rooms & Rates — Africa Royal Villa" },
+      { property: "og:title", content: "Rooms & Rates — AfricanRoyal Villa" },
       { property: "og:url", content: "/rooms" },
     ],
     links: [{ rel: "canonical", href: "/rooms" }],
@@ -96,7 +96,7 @@ function RoomsPage() {
                   <div className="aspect-[3/2] overflow-hidden">
                     <img
                       src={room.image}
-                      alt={`${room.name} at Africa Royal Villa`}
+                      alt={`${room.name} at AfricanRoyal Villa`}
                       width={800}
                       height={533}
                       loading="lazy"
