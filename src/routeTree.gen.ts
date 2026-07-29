@@ -16,10 +16,19 @@ import { Route as DiningRouteImport } from './routes/dining'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ConferenceRouteImport } from './routes/conference'
 import { Route as BookRouteImport } from './routes/book'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as RoomsRoomIdRouteImport } from './routes/rooms.$roomId'
 import { Route as BookConfirmationRouteImport } from './routes/book.confirmation'
+import { Route as AdminReservationsRouteImport } from './routes/admin.reservations'
+import { Route as AdminReportsRouteImport } from './routes/admin.reports'
+import { Route as AdminLoginRouteImport } from './routes/admin.login'
+import { Route as AdminHousekeepingRouteImport } from './routes/admin.housekeeping'
+import { Route as AdminGuestsRouteImport } from './routes/admin.guests'
+import { Route as AdminChannelsRouteImport } from './routes/admin.channels'
+import { Route as AdminCalendarRouteImport } from './routes/admin.calendar'
 
 const RoomsRoute = RoomsRouteImport.update({
   id: '/rooms',
@@ -56,6 +65,11 @@ const BookRoute = BookRouteImport.update({
   path: '/book',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -65,6 +79,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
 } as any)
 const RoomsRoomIdRoute = RoomsRoomIdRouteImport.update({
   id: '/$roomId',
@@ -76,10 +95,46 @@ const BookConfirmationRoute = BookConfirmationRouteImport.update({
   path: '/confirmation',
   getParentRoute: () => BookRoute,
 } as any)
+const AdminReservationsRoute = AdminReservationsRouteImport.update({
+  id: '/reservations',
+  path: '/reservations',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminReportsRoute = AdminReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminHousekeepingRoute = AdminHousekeepingRouteImport.update({
+  id: '/housekeeping',
+  path: '/housekeeping',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminGuestsRoute = AdminGuestsRouteImport.update({
+  id: '/guests',
+  path: '/guests',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminChannelsRoute = AdminChannelsRouteImport.update({
+  id: '/channels',
+  path: '/channels',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCalendarRoute = AdminCalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRouteWithChildren
   '/book': typeof BookRouteWithChildren
   '/conference': typeof ConferenceRoute
   '/contact': typeof ContactRoute
@@ -87,8 +142,16 @@ export interface FileRoutesByFullPath {
   '/gallery': typeof GalleryRoute
   '/lookup': typeof LookupRoute
   '/rooms': typeof RoomsRouteWithChildren
+  '/admin/calendar': typeof AdminCalendarRoute
+  '/admin/channels': typeof AdminChannelsRoute
+  '/admin/guests': typeof AdminGuestsRoute
+  '/admin/housekeeping': typeof AdminHousekeepingRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/reports': typeof AdminReportsRoute
+  '/admin/reservations': typeof AdminReservationsRoute
   '/book/confirmation': typeof BookConfirmationRoute
   '/rooms/$roomId': typeof RoomsRoomIdRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -100,13 +163,22 @@ export interface FileRoutesByTo {
   '/gallery': typeof GalleryRoute
   '/lookup': typeof LookupRoute
   '/rooms': typeof RoomsRouteWithChildren
+  '/admin/calendar': typeof AdminCalendarRoute
+  '/admin/channels': typeof AdminChannelsRoute
+  '/admin/guests': typeof AdminGuestsRoute
+  '/admin/housekeeping': typeof AdminHousekeepingRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/reports': typeof AdminReportsRoute
+  '/admin/reservations': typeof AdminReservationsRoute
   '/book/confirmation': typeof BookConfirmationRoute
   '/rooms/$roomId': typeof RoomsRoomIdRoute
+  '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRouteWithChildren
   '/book': typeof BookRouteWithChildren
   '/conference': typeof ConferenceRoute
   '/contact': typeof ContactRoute
@@ -114,14 +186,23 @@ export interface FileRoutesById {
   '/gallery': typeof GalleryRoute
   '/lookup': typeof LookupRoute
   '/rooms': typeof RoomsRouteWithChildren
+  '/admin/calendar': typeof AdminCalendarRoute
+  '/admin/channels': typeof AdminChannelsRoute
+  '/admin/guests': typeof AdminGuestsRoute
+  '/admin/housekeeping': typeof AdminHousekeepingRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/reports': typeof AdminReportsRoute
+  '/admin/reservations': typeof AdminReservationsRoute
   '/book/confirmation': typeof BookConfirmationRoute
   '/rooms/$roomId': typeof RoomsRoomIdRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/about'
+    | '/admin'
     | '/book'
     | '/conference'
     | '/contact'
@@ -129,8 +210,16 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/lookup'
     | '/rooms'
+    | '/admin/calendar'
+    | '/admin/channels'
+    | '/admin/guests'
+    | '/admin/housekeeping'
+    | '/admin/login'
+    | '/admin/reports'
+    | '/admin/reservations'
     | '/book/confirmation'
     | '/rooms/$roomId'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -142,12 +231,21 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/lookup'
     | '/rooms'
+    | '/admin/calendar'
+    | '/admin/channels'
+    | '/admin/guests'
+    | '/admin/housekeeping'
+    | '/admin/login'
+    | '/admin/reports'
+    | '/admin/reservations'
     | '/book/confirmation'
     | '/rooms/$roomId'
+    | '/admin'
   id:
     | '__root__'
     | '/'
     | '/about'
+    | '/admin'
     | '/book'
     | '/conference'
     | '/contact'
@@ -155,13 +253,22 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/lookup'
     | '/rooms'
+    | '/admin/calendar'
+    | '/admin/channels'
+    | '/admin/guests'
+    | '/admin/housekeeping'
+    | '/admin/login'
+    | '/admin/reports'
+    | '/admin/reservations'
     | '/book/confirmation'
     | '/rooms/$roomId'
+    | '/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AdminRoute: typeof AdminRouteWithChildren
   BookRoute: typeof BookRouteWithChildren
   ConferenceRoute: typeof ConferenceRoute
   ContactRoute: typeof ContactRoute
@@ -222,6 +329,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BookRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -235,6 +349,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/rooms/$roomId': {
       id: '/rooms/$roomId'
@@ -250,8 +371,81 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BookConfirmationRouteImport
       parentRoute: typeof BookRoute
     }
+    '/admin/reservations': {
+      id: '/admin/reservations'
+      path: '/reservations'
+      fullPath: '/admin/reservations'
+      preLoaderRoute: typeof AdminReservationsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/reports': {
+      id: '/admin/reports'
+      path: '/reports'
+      fullPath: '/admin/reports'
+      preLoaderRoute: typeof AdminReportsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/housekeeping': {
+      id: '/admin/housekeeping'
+      path: '/housekeeping'
+      fullPath: '/admin/housekeeping'
+      preLoaderRoute: typeof AdminHousekeepingRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/guests': {
+      id: '/admin/guests'
+      path: '/guests'
+      fullPath: '/admin/guests'
+      preLoaderRoute: typeof AdminGuestsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/channels': {
+      id: '/admin/channels'
+      path: '/channels'
+      fullPath: '/admin/channels'
+      preLoaderRoute: typeof AdminChannelsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/calendar': {
+      id: '/admin/calendar'
+      path: '/calendar'
+      fullPath: '/admin/calendar'
+      preLoaderRoute: typeof AdminCalendarRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
+
+interface AdminRouteChildren {
+  AdminCalendarRoute: typeof AdminCalendarRoute
+  AdminChannelsRoute: typeof AdminChannelsRoute
+  AdminGuestsRoute: typeof AdminGuestsRoute
+  AdminHousekeepingRoute: typeof AdminHousekeepingRoute
+  AdminLoginRoute: typeof AdminLoginRoute
+  AdminReportsRoute: typeof AdminReportsRoute
+  AdminReservationsRoute: typeof AdminReservationsRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminCalendarRoute: AdminCalendarRoute,
+  AdminChannelsRoute: AdminChannelsRoute,
+  AdminGuestsRoute: AdminGuestsRoute,
+  AdminHousekeepingRoute: AdminHousekeepingRoute,
+  AdminLoginRoute: AdminLoginRoute,
+  AdminReportsRoute: AdminReportsRoute,
+  AdminReservationsRoute: AdminReservationsRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface BookRouteChildren {
   BookConfirmationRoute: typeof BookConfirmationRoute
@@ -276,6 +470,7 @@ const RoomsRouteWithChildren = RoomsRoute._addFileChildren(RoomsRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AdminRoute: AdminRouteWithChildren,
   BookRoute: BookRouteWithChildren,
   ConferenceRoute: ConferenceRoute,
   ContactRoute: ContactRoute,
