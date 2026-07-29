@@ -9,60 +9,26 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SystemRouteImport } from './routes/system'
 import { Route as RoomsRouteImport } from './routes/rooms'
-import { Route as RestaurantRouteImport } from './routes/restaurant'
-import { Route as PortalRouteImport } from './routes/portal'
 import { Route as LookupRouteImport } from './routes/lookup'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as GuestsRouteImport } from './routes/guests'
 import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as DiningRouteImport } from './routes/dining'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ConferenceRouteImport } from './routes/conference'
-import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as BookRouteImport } from './routes/book'
-import { Route as BillingRouteImport } from './routes/billing'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as SystemStaffRouteImport } from './routes/system.staff'
-import { Route as StaffNewRouteImport } from './routes/staff.new'
 import { Route as RoomsRoomIdRouteImport } from './routes/rooms.$roomId'
 import { Route as BookConfirmationRouteImport } from './routes/book.confirmation'
 
-const SystemRoute = SystemRouteImport.update({
-  id: '/system',
-  path: '/system',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const RoomsRoute = RoomsRouteImport.update({
   id: '/rooms',
   path: '/rooms',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RestaurantRoute = RestaurantRouteImport.update({
-  id: '/restaurant',
-  path: '/restaurant',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PortalRoute = PortalRouteImport.update({
-  id: '/portal',
-  path: '/portal',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const LookupRoute = LookupRouteImport.update({
   id: '/lookup',
   path: '/lookup',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const GuestsRoute = GuestsRouteImport.update({
-  id: '/guests',
-  path: '/guests',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GalleryRoute = GalleryRouteImport.update({
@@ -85,19 +51,9 @@ const ConferenceRoute = ConferenceRouteImport.update({
   path: '/conference',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CalendarRoute = CalendarRouteImport.update({
-  id: '/calendar',
-  path: '/calendar',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const BookRoute = BookRouteImport.update({
   id: '/book',
   path: '/book',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BillingRoute = BillingRouteImport.update({
-  id: '/billing',
-  path: '/billing',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -108,16 +64,6 @@ const AboutRoute = AboutRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SystemStaffRoute = SystemStaffRouteImport.update({
-  id: '/staff',
-  path: '/staff',
-  getParentRoute: () => SystemRoute,
-} as any)
-const StaffNewRoute = StaffNewRouteImport.update({
-  id: '/staff/new',
-  path: '/staff/new',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RoomsRoomIdRoute = RoomsRoomIdRouteImport.update({
@@ -134,168 +80,99 @@ const BookConfirmationRoute = BookConfirmationRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/billing': typeof BillingRoute
   '/book': typeof BookRouteWithChildren
-  '/calendar': typeof CalendarRoute
   '/conference': typeof ConferenceRoute
   '/contact': typeof ContactRoute
   '/dining': typeof DiningRoute
   '/gallery': typeof GalleryRoute
-  '/guests': typeof GuestsRoute
-  '/login': typeof LoginRoute
   '/lookup': typeof LookupRoute
-  '/portal': typeof PortalRoute
-  '/restaurant': typeof RestaurantRoute
   '/rooms': typeof RoomsRouteWithChildren
-  '/system': typeof SystemRouteWithChildren
   '/book/confirmation': typeof BookConfirmationRoute
   '/rooms/$roomId': typeof RoomsRoomIdRoute
-  '/staff/new': typeof StaffNewRoute
-  '/system/staff': typeof SystemStaffRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/billing': typeof BillingRoute
   '/book': typeof BookRouteWithChildren
-  '/calendar': typeof CalendarRoute
   '/conference': typeof ConferenceRoute
   '/contact': typeof ContactRoute
   '/dining': typeof DiningRoute
   '/gallery': typeof GalleryRoute
-  '/guests': typeof GuestsRoute
-  '/login': typeof LoginRoute
   '/lookup': typeof LookupRoute
-  '/portal': typeof PortalRoute
-  '/restaurant': typeof RestaurantRoute
   '/rooms': typeof RoomsRouteWithChildren
-  '/system': typeof SystemRouteWithChildren
   '/book/confirmation': typeof BookConfirmationRoute
   '/rooms/$roomId': typeof RoomsRoomIdRoute
-  '/staff/new': typeof StaffNewRoute
-  '/system/staff': typeof SystemStaffRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/billing': typeof BillingRoute
   '/book': typeof BookRouteWithChildren
-  '/calendar': typeof CalendarRoute
   '/conference': typeof ConferenceRoute
   '/contact': typeof ContactRoute
   '/dining': typeof DiningRoute
   '/gallery': typeof GalleryRoute
-  '/guests': typeof GuestsRoute
-  '/login': typeof LoginRoute
   '/lookup': typeof LookupRoute
-  '/portal': typeof PortalRoute
-  '/restaurant': typeof RestaurantRoute
   '/rooms': typeof RoomsRouteWithChildren
-  '/system': typeof SystemRouteWithChildren
   '/book/confirmation': typeof BookConfirmationRoute
   '/rooms/$roomId': typeof RoomsRoomIdRoute
-  '/staff/new': typeof StaffNewRoute
-  '/system/staff': typeof SystemStaffRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/about'
-    | '/billing'
     | '/book'
-    | '/calendar'
     | '/conference'
     | '/contact'
     | '/dining'
     | '/gallery'
-    | '/guests'
-    | '/login'
     | '/lookup'
-    | '/portal'
-    | '/restaurant'
     | '/rooms'
-    | '/system'
     | '/book/confirmation'
     | '/rooms/$roomId'
-    | '/staff/new'
-    | '/system/staff'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
-    | '/billing'
     | '/book'
-    | '/calendar'
     | '/conference'
     | '/contact'
     | '/dining'
     | '/gallery'
-    | '/guests'
-    | '/login'
     | '/lookup'
-    | '/portal'
-    | '/restaurant'
     | '/rooms'
-    | '/system'
     | '/book/confirmation'
     | '/rooms/$roomId'
-    | '/staff/new'
-    | '/system/staff'
   id:
     | '__root__'
     | '/'
     | '/about'
-    | '/billing'
     | '/book'
-    | '/calendar'
     | '/conference'
     | '/contact'
     | '/dining'
     | '/gallery'
-    | '/guests'
-    | '/login'
     | '/lookup'
-    | '/portal'
-    | '/restaurant'
     | '/rooms'
-    | '/system'
     | '/book/confirmation'
     | '/rooms/$roomId'
-    | '/staff/new'
-    | '/system/staff'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  BillingRoute: typeof BillingRoute
   BookRoute: typeof BookRouteWithChildren
-  CalendarRoute: typeof CalendarRoute
   ConferenceRoute: typeof ConferenceRoute
   ContactRoute: typeof ContactRoute
   DiningRoute: typeof DiningRoute
   GalleryRoute: typeof GalleryRoute
-  GuestsRoute: typeof GuestsRoute
-  LoginRoute: typeof LoginRoute
   LookupRoute: typeof LookupRoute
-  PortalRoute: typeof PortalRoute
-  RestaurantRoute: typeof RestaurantRoute
   RoomsRoute: typeof RoomsRouteWithChildren
-  SystemRoute: typeof SystemRouteWithChildren
-  StaffNewRoute: typeof StaffNewRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/system': {
-      id: '/system'
-      path: '/system'
-      fullPath: '/system'
-      preLoaderRoute: typeof SystemRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/rooms': {
       id: '/rooms'
       path: '/rooms'
@@ -303,39 +180,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RoomsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/restaurant': {
-      id: '/restaurant'
-      path: '/restaurant'
-      fullPath: '/restaurant'
-      preLoaderRoute: typeof RestaurantRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/portal': {
-      id: '/portal'
-      path: '/portal'
-      fullPath: '/portal'
-      preLoaderRoute: typeof PortalRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/lookup': {
       id: '/lookup'
       path: '/lookup'
       fullPath: '/lookup'
       preLoaderRoute: typeof LookupRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/guests': {
-      id: '/guests'
-      path: '/guests'
-      fullPath: '/guests'
-      preLoaderRoute: typeof GuestsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/gallery': {
@@ -366,25 +215,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConferenceRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/calendar': {
-      id: '/calendar'
-      path: '/calendar'
-      fullPath: '/calendar'
-      preLoaderRoute: typeof CalendarRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/book': {
       id: '/book'
       path: '/book'
       fullPath: '/book'
       preLoaderRoute: typeof BookRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/billing': {
-      id: '/billing'
-      path: '/billing'
-      fullPath: '/billing'
-      preLoaderRoute: typeof BillingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -399,20 +234,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/system/staff': {
-      id: '/system/staff'
-      path: '/staff'
-      fullPath: '/system/staff'
-      preLoaderRoute: typeof SystemStaffRouteImport
-      parentRoute: typeof SystemRoute
-    }
-    '/staff/new': {
-      id: '/staff/new'
-      path: '/staff/new'
-      fullPath: '/staff/new'
-      preLoaderRoute: typeof StaffNewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/rooms/$roomId': {
@@ -452,35 +273,16 @@ const RoomsRouteChildren: RoomsRouteChildren = {
 
 const RoomsRouteWithChildren = RoomsRoute._addFileChildren(RoomsRouteChildren)
 
-interface SystemRouteChildren {
-  SystemStaffRoute: typeof SystemStaffRoute
-}
-
-const SystemRouteChildren: SystemRouteChildren = {
-  SystemStaffRoute: SystemStaffRoute,
-}
-
-const SystemRouteWithChildren =
-  SystemRoute._addFileChildren(SystemRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  BillingRoute: BillingRoute,
   BookRoute: BookRouteWithChildren,
-  CalendarRoute: CalendarRoute,
   ConferenceRoute: ConferenceRoute,
   ContactRoute: ContactRoute,
   DiningRoute: DiningRoute,
   GalleryRoute: GalleryRoute,
-  GuestsRoute: GuestsRoute,
-  LoginRoute: LoginRoute,
   LookupRoute: LookupRoute,
-  PortalRoute: PortalRoute,
-  RestaurantRoute: RestaurantRoute,
   RoomsRoute: RoomsRouteWithChildren,
-  SystemRoute: SystemRouteWithChildren,
-  StaffNewRoute: StaffNewRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

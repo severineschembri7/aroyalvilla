@@ -29,15 +29,6 @@ const createBookingSchema = z.object({
   source: z.enum(["website", "front_desk"]).default("website"),
   reference: z.string().optional(),
 });
-const portalLookupSchema = z.object({
-  email: z.string().email().max(200),
-  phone: z.string().min(4).max(40),
-});
-const preferenceSaveSchema = z.object({
-  email: z.string().email().max(200),
-  phone: z.string().min(4).max(40),
-  preferences: z.record(z.unknown()),
-});
 const statusUpdateSchema = z.object({
   reference: z.string().min(4).max(32),
   status: z.enum(["pending", "confirmed", "checked_in", "checked_out", "cancelled"]),
@@ -361,52 +352,4 @@ export const lookupBookingFn = createServerFn({ method: "POST" })
       email: guest.email,
       phone: guest.phone,
     };
-  });
-
-export const getGuestPortalData = createServerFn({ method: "POST" })
-  .validator((data: unknown) => portalLookupSchema.parse(data))
-  .handler(async ({ data }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: guest, error: guestError } = await supabaseAdmin
-      .from("booking_guests")
-      .select("reference, first_name, last_name, email, phone")
-      .ilike("email", data.email)
-      .limit(1)
-      .maybeSingle();
-    if (guestError) throw guestError;
-
-    if (!guest) return { guest: null, bookings: [] };
-
-    const { data: bookings, error: bookingError } = await supabaseAdmin
-      .from("bookings")
-      .select("reference, room_name, check_in, check_out, status, total")
-      .eq("reference", guest.reference)
-      .order("check_in", { ascending: false });
-    if (bookingError) throw bookingError;
-
-    return {
-      guest: {
-        firstName: guest.first_name,
-        lastName: guest.last_name,
-        email: guest.email,
-        phone: guest.phone,
-      },
-      bookings: bookings ?? [],
-    };
-  });
-
-export const saveGuestPreferences = createServerFn({ method: "POST" })
-  .validator((data: unknown) => preferenceSaveSchema.parse(data))
-  .handler(async ({ data }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { error } = await supabaseAdmin.from("guest_profiles").upsert(
-      {
-        email: data.email,
-        phone: data.phone,
-        preferences: data.preferences,
-      },
-      { onConflict: "email" },
-    );
-    if (error) throw error;
-    return { ok: true };
   });
