@@ -6,7 +6,7 @@ export function SiteFooter() {
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-16">
         <div className="max-w-[35ch]">
           <div className="font-serif text-2xl font-medium italic mb-6 text-espresso">
-            AfricanRoyal Villa
+            African Royal Villa
           </div>
           <p className="text-sm text-espresso/60 mb-8">
             Located in Karatu, the highland base between Lake Manyara and the Ngorongoro
@@ -52,7 +52,7 @@ export function SiteFooter() {
         </div>
       </div>
       <div className="max-w-7xl mx-auto pt-16 mt-16 border-t border-espresso/5 flex flex-col sm:flex-row gap-2 justify-between items-center text-[10px] text-espresso/40 font-medium uppercase tracking-[0.2em]">
-        <span>&copy; {new Date().getFullYear()} AfricanRoyal Villa &amp; Campsite</span>
+        <span>&copy; {new Date().getFullYear()} African Royal Villa &amp; Campsite</span>
         <span>Tanzania Hospitality Group</span>
       </div>
     </footer>

@@ -25,7 +25,7 @@ export function SiteNav() {
           to="/"
           className="font-serif text-xl font-medium tracking-tight italic text-espresso"
         >
-          AfricanRoyal Villa
+          African Royal Villa
         </Link>
         <div className="flex items-center gap-2 md:gap-6">
           <div className="hidden md:flex items-center gap-6">

@@ -73,10 +73,10 @@ async function triggerConfirmation(reference: string, booking: Record<string, un
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: "AfricanRoyal Villa <hello@aroyalvilla.com>",
+          from: "African Royal Villa <hello@aroyalvilla.com>",
           to: [booking.guest_email ?? "hello@aroyalvilla.com"],
           subject: `Booking confirmed: ${reference}`,
-          html: `<p>Your stay at AfricanRoyal Villa is confirmed.</p><p>Reference: ${reference}</p>`,
+          html: `<p>Your stay at African Royal Villa is confirmed.</p><p>Reference: ${reference}</p>`,
         }),
       });
     } catch {
@@ -95,7 +95,7 @@ async function triggerConfirmation(reference: string, booking: Record<string, un
         body: new URLSearchParams({
           From: twilioNumber,
           To: `whatsapp:${booking.guest_phone ?? ""}`,
-          Body: `Your reservation ${reference} is confirmed at AfricanRoyal Villa.`,
+          Body: `Your reservation ${reference} is confirmed at African Royal Villa.`,
         }),
       });
     } catch {

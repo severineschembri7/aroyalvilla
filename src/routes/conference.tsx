@@ -5,13 +5,13 @@ import conferenceImg from "@/assets/conference.jpg";
 export const Route = createFileRoute("/conference")({
   head: () => ({
     meta: [
-      { title: "Conference & Events — AfricanRoyal Villa" },
+      { title: "Conference & Events — African Royal Villa" },
       {
         name: "description",
         content:
           "The Savannah Room: a 150-pax conference facility for corporate retreats, summits and weddings in Karatu, Tanzania.",
       },
-      { property: "og:title", content: "Conference & Events — AfricanRoyal Villa" },
+      { property: "og:title", content: "Conference & Events — African Royal Villa" },
       { property: "og:url", content: "/conference" },
       { property: "og:image", content: conferenceImg },
     ],
@@ -42,7 +42,7 @@ function ConferencePage() {
               The Savannah Room
             </h1>
             <p className="mt-3 text-cream/80 max-w-[52ch]">
-              AfricanRoyal Villa's conference facility — up to 150 delegates in a single hall, with
+              African Royal Villa's conference facility — up to 150 delegates in a single hall, with
               full AV, natural light, and a savannah view.
             </p>
           </div>
