@@ -107,6 +107,9 @@ function LoginPage() {
 
           <div className="mt-6 p-4 bg-slate-50 rounded-lg">
             <p className="text-xs text-slate-600"><strong>Staff access only.</strong> Use the staff account created in Supabase by management.</p>
+            <p className="text-xs text-slate-600">
+              <strong>Staff access only.</strong> Use your assigned property account. First-time setup is available from the operations console when no staff accounts exist.
+            </p>
           </div>
         </div>
       </div>
