@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useLocation,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -133,16 +134,18 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const location = useLocation();
+  const isAdmin = location.pathname.startsWith("/admin");
 
   return (
     <QueryClientProvider client={queryClient}>
       <div className="min-h-screen bg-cream text-espresso font-sans flex flex-col">
-        <SiteNav />
+        {!isAdmin && <SiteNav />}
         <main className="flex-1">
           <Outlet />
         </main>
-        <SiteFooter />
-        <WhatsAppFAB />
+        {!isAdmin && <SiteFooter />}
+        {!isAdmin && <WhatsAppFAB />}
       </div>
     </QueryClientProvider>
   );
