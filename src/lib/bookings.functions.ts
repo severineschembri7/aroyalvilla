@@ -29,15 +29,6 @@ const createBookingSchema = z.object({
   source: z.enum(["website", "front_desk"]).default("website"),
   reference: z.string().optional(),
 });
-const portalLookupSchema = z.object({
-  email: z.string().email().max(200),
-  phone: z.string().min(4).max(40),
-});
-const preferenceSaveSchema = z.object({
-  email: z.string().email().max(200),
-  phone: z.string().min(4).max(40),
-  preferences: z.record(z.unknown()),
-});
 const statusUpdateSchema = z.object({
   reference: z.string().min(4).max(32),
   status: z.enum(["pending", "confirmed", "checked_in", "checked_out", "cancelled"]),
