@@ -81,7 +81,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient; runt
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "African Royal Villa & Campsite — Boutique Lodge in Karatu, Tanzania" },
+      { title: "African Royal Villa & Campsite — Lodge in Karatu" },
       {
         name: "description",
         content:
@@ -108,6 +108,34 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient; runt
         rel: "stylesheet",
         href:
           "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap",
+      },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "LodgingBusiness",
+          name: "African Royal Villa & Campsite",
+          description:
+            "Boutique lodge and campsite in Karatu, Tanzania with four room categories, a restaurant and bar, and a 150-pax conference facility.",
+          url: "https://africanroyalvilla.co.tz",
+          telephone: ["+255768777428", "+255667999706"],
+          email: "hello@africanroyalvilla.co.tz",
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: "Karatu Highway",
+            addressLocality: "Karatu",
+            addressRegion: "Arusha Region",
+            addressCountry: "TZ",
+          },
+          geo: {
+            "@type": "GeoCoordinates",
+            latitude: -3.365532,
+            longitude: 35.672269,
+          },
+          priceRange: "$$$",
+        }),
       },
     ],
   }),
