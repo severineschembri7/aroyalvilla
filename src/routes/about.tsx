@@ -53,6 +53,7 @@ function AboutPage() {
       </section>
 
       <section className="pb-24 px-6 max-w-7xl mx-auto grid md:grid-cols-2 gap-8">
+        <h2 className="sr-only">Location</h2>
         <div className="p-8 bg-cream rounded-2xl border border-espresso/10">
           <div className="text-xs uppercase tracking-widest text-espresso/40">Address</div>
           <p className="mt-2 font-serif text-xl">Karatu Highway, Arusha Region, Tanzania</p>
@@ -96,6 +97,7 @@ function AboutPage() {
       </section>
 
       <section className="pb-24 px-6 max-w-7xl mx-auto">
+        <h2 className="font-serif text-2xl mb-6 text-espresso">Getting here</h2>
         <DirectionsWidget />
       </section>
     </div>

@@ -140,7 +140,7 @@ function DiningPage() {
 
       <section className="py-16 px-6 max-w-6xl mx-auto grid md:grid-cols-3 gap-10">
         <div>
-          <h3 className="font-serif text-xl mb-2 text-espresso">Hours</h3>
+          <h2 className="font-serif text-xl mb-2 text-espresso">Hours</h2>
           <ul className="text-espresso/75 space-y-1 text-sm">
             <li>Breakfast — 6:30 to 10:00</li>
             <li>Lunch — 12:30 to 15:00</li>
@@ -149,7 +149,7 @@ function DiningPage() {
           </ul>
         </div>
         <div>
-          <h3 className="font-serif text-xl mb-2 text-espresso">Meal plans</h3>
+          <h2 className="font-serif text-xl mb-2 text-espresso">Meal plans</h2>
           <p className="text-espresso/75 text-sm leading-relaxed">
             Half board and full board can be added to any stay at checkout, or
             arranged after arrival at reception. Special diets — vegetarian,
@@ -157,7 +157,7 @@ function DiningPage() {
           </p>
         </div>
         <div>
-          <h3 className="font-serif text-xl mb-2 text-espresso">Non-residents</h3>
+          <h2 className="font-serif text-xl mb-2 text-espresso">Non-residents</h2>
           <p className="text-espresso/75 text-sm leading-relaxed">
             The restaurant welcomes outside guests for lunch and dinner. Please
             call ahead on <span className="whitespace-nowrap">+255 768 777 428</span>{" "}
