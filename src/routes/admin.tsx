@@ -2,6 +2,18 @@ import { createFileRoute, Link, Outlet, useLocation, useNavigate } from "@tansta
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { getMyRoles } from "@/lib/admin.functions";
+import {
+  LayoutDashboard,
+  CalendarCheck,
+  CalendarDays,
+  Users,
+  BedDouble,
+  BarChart3,
+  Share2,
+  ShieldCheck,
+  LogOut,
+  ExternalLink,
+} from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
   ssr: false,
