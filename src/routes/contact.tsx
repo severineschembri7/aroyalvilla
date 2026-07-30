@@ -36,7 +36,8 @@ function ContactPage() {
         <dl className="space-y-6 text-sm">
           <div>
             <dt className="text-xs uppercase tracking-widest text-espresso/40">Phone</dt>
-            <dd className="mt-1 text-lg">+255 759 533 491</dd>
+            <dd className="mt-1 text-lg">+255 768 777 428</dd>
+            <dd className="mt-1 text-lg">+255 667 999 706</dd>
           </div>
           <div>
             <dt className="text-xs uppercase tracking-widest text-espresso/40">Email</dt>

@@ -61,10 +61,10 @@ function LookupPage() {
   };
 
   const waHref = booking
-    ? `https://wa.me/255759533491?text=${encodeURIComponent(
+    ? `https://wa.me/255768777428?text=${encodeURIComponent(
         `Hello African Royal Villa, this is ${booking.guest.firstName} ${booking.guest.lastName}. I'd like to ask about my booking ${booking.reference} (${booking.roomName}, ${booking.checkIn} → ${booking.checkOut}).`,
       )}`
-    : `https://wa.me/255759533491`;
+    : `https://wa.me/255768777428`;
 
   return (
     <div className="animate-fade-in max-w-3xl mx-auto px-6 py-20">

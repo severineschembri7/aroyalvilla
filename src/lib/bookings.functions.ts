@@ -77,7 +77,7 @@ function statusChangeCopy(status: string, reference: string, roomName: string) {
     case "checked_out":
       return `Thank you for staying with African Royal Villa. Your reservation ${reference} is checked out. We would love to host you again.`;
     case "cancelled":
-      return `Your reservation ${reference} (${roomName}) has been cancelled. If this was unexpected, please reply to this email or WhatsApp us on +255 759 533 491.`;
+      return `Your reservation ${reference} (${roomName}) has been cancelled. If this was unexpected, please reply to this email or WhatsApp us on +255 768 777 428.`;
     default:
       return `Your reservation ${reference} (${roomName}) status was updated to: ${status}.`;
   }
@@ -104,7 +104,7 @@ async function triggerConfirmation(reference: string, booking: Record<string, un
       `Total:     $${total}`,
       ``,
       `Your reservation is currently PENDING and will be confirmed by our`,
-      `front desk shortly. Reply to this email or WhatsApp +255 759 533 491`,
+      `front desk shortly. Reply to this email or WhatsApp +255 768 777 428`,
       `for anything at all.`,
     ].join("\n"),
   );
