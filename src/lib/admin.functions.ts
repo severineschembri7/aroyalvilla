@@ -141,3 +141,102 @@ export const setRoomStatus = createServerFn({ method: "POST" })
     if (error) throw error;
     return row;
   });
+// ---------------------------------------------------------------------------
+// Staff & role management (admin only)
+// ---------------------------------------------------------------------------
+
+export const listStaff = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertAdmin(context.userId);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: users, error } = await supabaseAdmin.auth.admin.listUsers({
+      page: 1,
+      perPage: 200,
+    });
+    if (error) throw error;
+    const { data: roleRows, error: rErr } = await supabaseAdmin
+      .from("user_roles")
+      .select("user_id, role");
+    if (rErr) throw rErr;
+    const byUser = new Map<string, string[]>();
+    for (const r of roleRows ?? []) {
+      byUser.set(r.user_id, [...(byUser.get(r.user_id) ?? []), r.role as string]);
+    }
+    return (users?.users ?? []).map((u) => ({
+      id: u.id,
+      email: u.email ?? "",
+      createdAt: u.created_at,
+      lastSignInAt: u.last_sign_in_at ?? null,
+      roles: byUser.get(u.id) ?? [],
+    }));
+  });
+
+const roleMutationSchema = z.object({
+  userId: z.string().uuid(),
+  role: z.enum(["admin", "staff"]),
+});
+
+export const grantRole = createServerFn({ method: "POST" })
+  .validator((data: unknown) => roleMutationSchema.parse(data))
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context, data }) => {
+    await assertAdmin(context.userId);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin
+      .from("user_roles")
+      .upsert({ user_id: data.userId, role: data.role }, { onConflict: "user_id,role" });
+    if (error) throw error;
+    return { ok: true };
+  });
+
+export const revokeRole = createServerFn({ method: "POST" })
+  .validator((data: unknown) => roleMutationSchema.parse(data))
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context, data }) => {
+    await assertAdmin(context.userId);
+    if (data.userId === context.userId && data.role === "admin") {
+      throw new Error("You cannot remove your own admin role.");
+    }
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin
+      .from("user_roles")
+      .delete()
+      .eq("user_id", data.userId)
+      .eq("role", data.role);
+    if (error) throw error;
+    return { ok: true };
+  });
+
+const inviteSchema = z.object({
+  email: z.string().email(),
+  role: z.enum(["admin", "staff"]),
+});
+
+export const inviteStaff = createServerFn({ method: "POST" })
+  .validator((data: unknown) => inviteSchema.parse(data))
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context, data }) => {
+    await assertAdmin(context.userId);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const email = data.email.toLowerCase();
+
+    const { data: existing } = await supabaseAdmin.auth.admin.listUsers({
+      page: 1,
+      perPage: 200,
+    });
+    let user = (existing?.users ?? []).find((u) => (u.email ?? "").toLowerCase() === email);
+
+    if (!user) {
+      const { data: invited, error } = await supabaseAdmin.auth.admin.inviteUserByEmail(email);
+      if (error) throw error;
+      user = invited.user ?? undefined;
+    }
+    if (!user) throw new Error("Could not create the account for that email.");
+
+    const { error: rErr } = await supabaseAdmin
+      .from("user_roles")
+      .upsert({ user_id: user.id, role: data.role }, { onConflict: "user_id,role" });
+    if (rErr) throw rErr;
+    return { ok: true, userId: user.id, email };
+  });
