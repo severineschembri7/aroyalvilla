@@ -21,11 +21,59 @@ export const Route = createFileRoute("/dining")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [{ rel: "canonical", href: "/dining" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FoodEstablishment",
+          name: "African Royal Villa Restaurant & Bar",
+          servesCuisine: ["East African", "International"],
+          telephone: ["+255768777428", "+255667999706"],
+          priceRange: "$$",
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: "Karatu Highway",
+            addressLocality: "Karatu",
+            addressRegion: "Arusha Region",
+            addressCountry: "TZ",
+          },
+          openingHoursSpecification: [
+            {
+              "@type": "OpeningHoursSpecification",
+              dayOfWeek: [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday",
+              ],
+              opens: "06:30",
+              closes: "22:00",
+            },
+          ],
+          hasMenu: {
+            "@type": "Menu",
+            hasMenuSection: MENU.map((section) => ({
+              "@type": "MenuSection",
+              name: section.course,
+              hasMenuItem: section.dishes.map((d) => ({
+                "@type": "MenuItem",
+                name: d.name,
+                description: d.note,
+              })),
+            })),
+          },
+        }),
+      },
+    ],
   }),
   component: DiningPage,
 });
 
-const MENU = [
+const MENU: { course: string; dishes: { name: string; note: string }[] }[] = [
   {
     course: "To begin",
     dishes: [
