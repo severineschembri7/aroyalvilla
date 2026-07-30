@@ -17,6 +17,12 @@ async function assertStaff(userId: string) {
   return roles;
 }
 
+async function assertAdmin(userId: string) {
+  const roles = await assertStaff(userId);
+  if (!roles.includes("admin")) throw new Error("Admin only");
+  return roles;
+}
+
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 export const getMyRoles = createServerFn({ method: "GET" })
