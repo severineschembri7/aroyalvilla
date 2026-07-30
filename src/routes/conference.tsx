@@ -114,28 +114,33 @@ function ConferencePage() {
             >
               <input
                 required
+                aria-label="Your name"
                 placeholder="Your name"
                 className="w-full bg-white/5 border border-white/10 rounded-md px-3 py-2 text-cream placeholder:text-cream/40 outline-none focus:border-gold"
               />
               <input
                 required
                 type="email"
+                aria-label="Email"
                 placeholder="Email"
                 className="w-full bg-white/5 border border-white/10 rounded-md px-3 py-2 text-cream placeholder:text-cream/40 outline-none focus:border-gold"
               />
               <input
                 type="date"
                 required
+                aria-label="Preferred event date"
                 className="w-full bg-white/5 border border-white/10 rounded-md px-3 py-2 text-cream placeholder:text-cream/40 outline-none focus:border-gold"
               />
               <input
                 type="number"
                 min={1}
+                aria-label="Headcount"
                 placeholder="Headcount"
                 className="w-full bg-white/5 border border-white/10 rounded-md px-3 py-2 text-cream placeholder:text-cream/40 outline-none focus:border-gold"
               />
               <select
                 required
+                aria-label="Event type"
                 defaultValue=""
                 className="w-full bg-white/5 border border-white/10 rounded-md px-3 py-2 text-cream outline-none focus:border-gold"
               >

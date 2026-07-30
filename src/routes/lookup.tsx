@@ -85,6 +85,7 @@ function LookupPage() {
         onSubmit={submit}
         className="bg-cream border border-espresso/10 rounded-2xl p-6 md:p-8 grid gap-4"
       >
+        <h2 className="font-serif text-2xl text-espresso">Look up your booking</h2>
         <Field label="Booking reference">
           <input
             required
