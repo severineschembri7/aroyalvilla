@@ -112,7 +112,8 @@ function DiningPage() {
           <h3 className="font-serif text-xl mb-2 text-espresso">Non-residents</h3>
           <p className="text-espresso/75 text-sm leading-relaxed">
             The restaurant welcomes outside guests for lunch and dinner. Please
-            call ahead on <span className="whitespace-nowrap">+255 759 533 491</span>{" "}
+            call ahead on <span className="whitespace-nowrap">+255 768 777 428</span>{" "}
+            or <span className="whitespace-nowrap">+255 667 999 706</span>{" "}
             to reserve a table on busy evenings.
           </p>
         </div>

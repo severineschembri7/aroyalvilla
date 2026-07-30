@@ -47,7 +47,7 @@ function ConfirmationPage() {
   }, [ref]);
 
   const status = (liveStatus as BookingStatus | null) ?? booking?.status ?? "pending";
-  const waHref = `https://wa.me/255759533491?text=${encodeURIComponent(
+  const waHref = `https://wa.me/255768777428?text=${encodeURIComponent(
     `Hello African Royal Villa, I'd like to ask about my booking ${ref}.`,
   )}`;
 
