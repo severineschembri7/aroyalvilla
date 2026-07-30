@@ -109,7 +109,7 @@ export function AvailabilityWidget({
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="p-3 flex flex-col gap-1 border-r border-espresso/5 last:border-r-0 cursor-pointer">
-      <span className="text-[10px] uppercase tracking-widest text-espresso/40 font-semibold">
+      <span className="text-[11px] uppercase tracking-widest text-espresso/80 font-semibold">
         {label}
       </span>
       {children}
