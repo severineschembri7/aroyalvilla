@@ -122,49 +122,102 @@ function AdminLayout() {
     );
   }
 
+  const isAdmin = state.roles.includes("admin");
+  const items = NAV.filter((n) => !n.adminOnly || isAdmin);
+  const initials = (state.email[0] ?? "A").toUpperCase();
+
+  const navLinks = (
+    <>
+      {items.map((n) => {
+        const active = n.exact
+          ? location.pathname === n.to
+          : location.pathname.startsWith(n.to);
+        const Icon = n.icon;
+        return (
+          <Link
+            key={n.to}
+            to={n.to}
+            className={`flex shrink-0 items-center gap-2.5 whitespace-nowrap rounded-xl px-3 py-2 text-sm transition ${
+              active
+                ? "bg-espresso text-cream shadow-sm"
+                : "text-espresso/70 hover:bg-espresso/5 hover:text-espresso"
+            }`}
+          >
+            <Icon className="size-4" />
+            {n.label}
+          </Link>
+        );
+      })}
+    </>
+  );
+
   return (
-    <div className="min-h-screen bg-cream text-espresso font-sans">
-      <header className="border-b border-espresso/10 bg-white/60 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-          <div>
-            <p className="font-serif text-lg text-espresso">African Royal Villa · Dashboard</p>
-            <p className="text-xs text-espresso/60">{state.email} · {state.roles.join(", ")}</p>
-          </div>
+    <div className="min-h-screen bg-cream font-sans text-espresso lg:flex">
+      <aside className="hidden w-64 shrink-0 flex-col border-r border-espresso/10 bg-white/70 px-4 py-6 lg:flex">
+        <Link to="/admin" className="px-2">
+          <p className="font-serif text-xl italic leading-tight">African Royal Villa</p>
+          <p className="text-[10px] uppercase tracking-[0.2em] text-espresso/40">
+            Operations
+          </p>
+        </Link>
+        <nav className="mt-8 flex flex-1 flex-col gap-1">{navLinks}</nav>
+        <div className="mt-6 rounded-2xl border border-espresso/10 bg-cream p-3">
           <div className="flex items-center gap-3">
-            <Link to="/" className="text-xs underline text-espresso/70">View site</Link>
+            <span className="grid size-9 place-items-center rounded-full bg-terracotta text-sm font-semibold text-cream">
+              {initials}
+            </span>
+            <div className="min-w-0">
+              <p className="truncate text-xs font-medium">{state.email}</p>
+              <p className="text-[10px] uppercase tracking-widest text-espresso/50">
+                {state.roles.join(" · ")}
+              </p>
+            </div>
+          </div>
+          <div className="mt-3 flex gap-2">
+            <Link
+              to="/"
+              className="flex flex-1 items-center justify-center gap-1 rounded-lg border border-espresso/15 py-1.5 text-[11px] text-espresso/70 hover:bg-white"
+            >
+              <ExternalLink className="size-3" /> Site
+            </Link>
             <button
-              className="rounded border border-espresso/30 px-3 py-1 text-xs"
+              className="flex flex-1 items-center justify-center gap-1 rounded-lg border border-espresso/15 py-1.5 text-[11px] text-espresso/70 hover:bg-white"
               onClick={async () => {
                 await supabase.auth.signOut();
                 navigate({ to: "/admin/login" });
               }}
             >
-              Sign out
+              <LogOut className="size-3" /> Out
             </button>
           </div>
         </div>
-        <nav className="mx-auto flex max-w-7xl gap-1 overflow-x-auto px-4 pb-2 text-sm">
-          {NAV.map((n) => {
-            const active = n.exact
-              ? location.pathname === n.to
-              : location.pathname.startsWith(n.to);
-            return (
-              <Link
-                key={n.to}
-                to={n.to}
-                className={`whitespace-nowrap rounded px-3 py-1.5 transition ${
-                  active ? "bg-espresso text-cream" : "text-espresso/70 hover:bg-espresso/5"
-                }`}
-              >
-                {n.label}
-              </Link>
-            );
-          })}
-        </nav>
-      </header>
-      <main className="mx-auto max-w-7xl px-4 py-6">
-        <Outlet />
-      </main>
+      </aside>
+
+      <div className="flex min-w-0 flex-1 flex-col">
+        <header className="sticky top-0 z-20 border-b border-espresso/10 bg-cream/85 backdrop-blur lg:hidden">
+          <div className="flex items-center justify-between px-4 py-3">
+            <div className="min-w-0">
+              <p className="font-serif text-base italic">African Royal Villa</p>
+              <p className="truncate text-[10px] uppercase tracking-widest text-espresso/50">
+                {state.roles.join(" · ")}
+              </p>
+            </div>
+            <button
+              className="flex items-center gap-1 rounded-lg border border-espresso/20 px-3 py-1.5 text-xs"
+              onClick={async () => {
+                await supabase.auth.signOut();
+                navigate({ to: "/admin/login" });
+              }}
+            >
+              <LogOut className="size-3" /> Sign out
+            </button>
+          </div>
+          <nav className="flex gap-1 overflow-x-auto px-3 pb-2">{navLinks}</nav>
+        </header>
+        <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 lg:px-8 lg:py-10">
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 }
