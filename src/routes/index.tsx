@@ -49,7 +49,7 @@ function Index() {
           <h2 className="mt-4 font-serif text-3xl md:text-4xl font-medium text-balance">
             Refined bush hospitality
           </h2>
-          <p className="mt-4 max-w-[52ch] mx-auto text-espresso/60 text-pretty">
+          <p className="mt-4 max-w-[52ch] mx-auto text-espresso/80 text-pretty">
             Four distinct categories designed to echo the textures of the Karatu highlands — from
             solo travellers to families on a shared safari.
           </p>

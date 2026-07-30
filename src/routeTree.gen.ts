@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as RoomsRouteImport } from './routes/rooms'
 import { Route as LookupRouteImport } from './routes/lookup'
 import { Route as GalleryRouteImport } from './routes/gallery'
@@ -31,6 +32,11 @@ import { Route as AdminGuestsRouteImport } from './routes/admin.guests'
 import { Route as AdminChannelsRouteImport } from './routes/admin.channels'
 import { Route as AdminCalendarRouteImport } from './routes/admin.calendar'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RoomsRoute = RoomsRouteImport.update({
   id: '/rooms',
   path: '/rooms',
@@ -148,6 +154,7 @@ export interface FileRoutesByFullPath {
   '/gallery': typeof GalleryRoute
   '/lookup': typeof LookupRoute
   '/rooms': typeof RoomsRouteWithChildren
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/calendar': typeof AdminCalendarRoute
   '/admin/channels': typeof AdminChannelsRoute
   '/admin/guests': typeof AdminGuestsRoute
@@ -170,6 +177,7 @@ export interface FileRoutesByTo {
   '/gallery': typeof GalleryRoute
   '/lookup': typeof LookupRoute
   '/rooms': typeof RoomsRouteWithChildren
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/calendar': typeof AdminCalendarRoute
   '/admin/channels': typeof AdminChannelsRoute
   '/admin/guests': typeof AdminGuestsRoute
@@ -194,6 +202,7 @@ export interface FileRoutesById {
   '/gallery': typeof GalleryRoute
   '/lookup': typeof LookupRoute
   '/rooms': typeof RoomsRouteWithChildren
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/calendar': typeof AdminCalendarRoute
   '/admin/channels': typeof AdminChannelsRoute
   '/admin/guests': typeof AdminGuestsRoute
@@ -219,6 +228,7 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/lookup'
     | '/rooms'
+    | '/sitemap.xml'
     | '/admin/calendar'
     | '/admin/channels'
     | '/admin/guests'
@@ -241,6 +251,7 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/lookup'
     | '/rooms'
+    | '/sitemap.xml'
     | '/admin/calendar'
     | '/admin/channels'
     | '/admin/guests'
@@ -264,6 +275,7 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/lookup'
     | '/rooms'
+    | '/sitemap.xml'
     | '/admin/calendar'
     | '/admin/channels'
     | '/admin/guests'
@@ -288,10 +300,18 @@ export interface RootRouteChildren {
   GalleryRoute: typeof GalleryRoute
   LookupRoute: typeof LookupRoute
   RoomsRoute: typeof RoomsRouteWithChildren
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/rooms': {
       id: '/rooms'
       path: '/rooms'
@@ -499,17 +519,8 @@ const rootRouteChildren: RootRouteChildren = {
   GalleryRoute: GalleryRoute,
   LookupRoute: LookupRoute,
   RoomsRoute: RoomsRouteWithChildren,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

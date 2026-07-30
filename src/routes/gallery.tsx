@@ -66,6 +66,7 @@ function GalleryPage() {
         ))}
       </div>
 
+      <h2 className="mt-12 font-serif text-2xl text-espresso">Photographs of the property</h2>
       <div className="mt-8 columns-1 sm:columns-2 lg:columns-3 gap-4 [column-fill:_balance]">
         {shown.map((img, i) => (
           <div key={img.src + i} className="mb-4 break-inside-avoid">

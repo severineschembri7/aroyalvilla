@@ -21,11 +21,59 @@ export const Route = createFileRoute("/dining")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [{ rel: "canonical", href: "/dining" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FoodEstablishment",
+          name: "African Royal Villa Restaurant & Bar",
+          servesCuisine: ["East African", "International"],
+          telephone: ["+255768777428", "+255667999706"],
+          priceRange: "$$",
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: "Karatu Highway",
+            addressLocality: "Karatu",
+            addressRegion: "Arusha Region",
+            addressCountry: "TZ",
+          },
+          openingHoursSpecification: [
+            {
+              "@type": "OpeningHoursSpecification",
+              dayOfWeek: [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday",
+              ],
+              opens: "06:30",
+              closes: "22:00",
+            },
+          ],
+          hasMenu: {
+            "@type": "Menu",
+            hasMenuSection: MENU.map((section) => ({
+              "@type": "MenuSection",
+              name: section.course,
+              hasMenuItem: section.dishes.map((d) => ({
+                "@type": "MenuItem",
+                name: d.name,
+                description: d.note,
+              })),
+            })),
+          },
+        }),
+      },
+    ],
   }),
   component: DiningPage,
 });
 
-const MENU = [
+const MENU: { course: string; dishes: { name: string; note: string }[] }[] = [
   {
     course: "To begin",
     dishes: [
@@ -92,7 +140,7 @@ function DiningPage() {
 
       <section className="py-16 px-6 max-w-6xl mx-auto grid md:grid-cols-3 gap-10">
         <div>
-          <h3 className="font-serif text-xl mb-2 text-espresso">Hours</h3>
+          <h2 className="font-serif text-xl mb-2 text-espresso">Hours</h2>
           <ul className="text-espresso/75 space-y-1 text-sm">
             <li>Breakfast — 6:30 to 10:00</li>
             <li>Lunch — 12:30 to 15:00</li>
@@ -101,7 +149,7 @@ function DiningPage() {
           </ul>
         </div>
         <div>
-          <h3 className="font-serif text-xl mb-2 text-espresso">Meal plans</h3>
+          <h2 className="font-serif text-xl mb-2 text-espresso">Meal plans</h2>
           <p className="text-espresso/75 text-sm leading-relaxed">
             Half board and full board can be added to any stay at checkout, or
             arranged after arrival at reception. Special diets — vegetarian,
@@ -109,7 +157,7 @@ function DiningPage() {
           </p>
         </div>
         <div>
-          <h3 className="font-serif text-xl mb-2 text-espresso">Non-residents</h3>
+          <h2 className="font-serif text-xl mb-2 text-espresso">Non-residents</h2>
           <p className="text-espresso/75 text-sm leading-relaxed">
             The restaurant welcomes outside guests for lunch and dinner. Please
             call ahead on <span className="whitespace-nowrap">+255 768 777 428</span>{" "}

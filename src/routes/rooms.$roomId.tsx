@@ -22,6 +22,40 @@ export const Route = createFileRoute("/rooms/$roomId")({
     links: loaderData
       ? [{ rel: "canonical", href: `/rooms/${loaderData.room.id}` }]
       : [],
+    scripts: loaderData
+      ? [
+          {
+            type: "application/ld+json",
+            children: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "HotelRoom",
+              name: loaderData.room.name,
+              description: loaderData.room.description,
+              occupancy: {
+                "@type": "QuantitativeValue",
+                maxValue: loaderData.room.capacity,
+                unitText: "guests",
+              },
+              amenityFeature: loaderData.room.amenities.map((a) => ({
+                "@type": "LocationFeatureSpecification",
+                name: a,
+                value: true,
+              })),
+              containedInPlace: {
+                "@type": "LodgingBusiness",
+                name: "African Royal Villa & Campsite",
+                url: "https://africanroyalvilla.co.tz",
+              },
+              offers: {
+                "@type": "Offer",
+                price: loaderData.room.rate,
+                priceCurrency: "USD",
+                url: `https://africanroyalvilla.co.tz/rooms/${loaderData.room.id}`,
+              },
+            }),
+          },
+        ]
+      : [],
   }),
   notFoundComponent: () => (
     <div className="max-w-3xl mx-auto px-6 py-32 text-center">
