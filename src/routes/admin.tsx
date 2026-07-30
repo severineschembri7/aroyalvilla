@@ -15,13 +15,14 @@ type SessionState =
   | { kind: "ok"; email: string; roles: string[] };
 
 const NAV = [
-  { to: "/admin", label: "Overview", exact: true },
-  { to: "/admin/reservations", label: "Reservations" },
-  { to: "/admin/calendar", label: "Calendar" },
-  { to: "/admin/guests", label: "Guests" },
-  { to: "/admin/housekeeping", label: "Housekeeping" },
-  { to: "/admin/reports", label: "Reports" },
-  { to: "/admin/channels", label: "Channels" },
+  { to: "/admin", label: "Overview", icon: LayoutDashboard, exact: true },
+  { to: "/admin/reservations", label: "Reservations", icon: CalendarCheck },
+  { to: "/admin/calendar", label: "Calendar", icon: CalendarDays },
+  { to: "/admin/guests", label: "Guests", icon: Users },
+  { to: "/admin/housekeeping", label: "Housekeeping", icon: BedDouble },
+  { to: "/admin/reports", label: "Reports", icon: BarChart3 },
+  { to: "/admin/channels", label: "Channels", icon: Share2 },
+  { to: "/admin/staff", label: "Staff & roles", icon: ShieldCheck, adminOnly: true },
 ];
 
 function AdminLayout() {
