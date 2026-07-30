@@ -22,6 +22,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as RoomsRoomIdRouteImport } from './routes/rooms.$roomId'
 import { Route as BookConfirmationRouteImport } from './routes/book.confirmation'
+import { Route as AdminStaffRouteImport } from './routes/admin.staff'
 import { Route as AdminReservationsRouteImport } from './routes/admin.reservations'
 import { Route as AdminReportsRouteImport } from './routes/admin.reports'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
@@ -95,6 +96,11 @@ const BookConfirmationRoute = BookConfirmationRouteImport.update({
   path: '/confirmation',
   getParentRoute: () => BookRoute,
 } as any)
+const AdminStaffRoute = AdminStaffRouteImport.update({
+  id: '/staff',
+  path: '/staff',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminReservationsRoute = AdminReservationsRouteImport.update({
   id: '/reservations',
   path: '/reservations',
@@ -149,6 +155,7 @@ export interface FileRoutesByFullPath {
   '/admin/login': typeof AdminLoginRoute
   '/admin/reports': typeof AdminReportsRoute
   '/admin/reservations': typeof AdminReservationsRoute
+  '/admin/staff': typeof AdminStaffRoute
   '/book/confirmation': typeof BookConfirmationRoute
   '/rooms/$roomId': typeof RoomsRoomIdRoute
   '/admin/': typeof AdminIndexRoute
@@ -170,6 +177,7 @@ export interface FileRoutesByTo {
   '/admin/login': typeof AdminLoginRoute
   '/admin/reports': typeof AdminReportsRoute
   '/admin/reservations': typeof AdminReservationsRoute
+  '/admin/staff': typeof AdminStaffRoute
   '/book/confirmation': typeof BookConfirmationRoute
   '/rooms/$roomId': typeof RoomsRoomIdRoute
   '/admin': typeof AdminIndexRoute
@@ -193,6 +201,7 @@ export interface FileRoutesById {
   '/admin/login': typeof AdminLoginRoute
   '/admin/reports': typeof AdminReportsRoute
   '/admin/reservations': typeof AdminReservationsRoute
+  '/admin/staff': typeof AdminStaffRoute
   '/book/confirmation': typeof BookConfirmationRoute
   '/rooms/$roomId': typeof RoomsRoomIdRoute
   '/admin/': typeof AdminIndexRoute
@@ -217,6 +226,7 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/admin/reports'
     | '/admin/reservations'
+    | '/admin/staff'
     | '/book/confirmation'
     | '/rooms/$roomId'
     | '/admin/'
@@ -238,6 +248,7 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/admin/reports'
     | '/admin/reservations'
+    | '/admin/staff'
     | '/book/confirmation'
     | '/rooms/$roomId'
     | '/admin'
@@ -260,6 +271,7 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/admin/reports'
     | '/admin/reservations'
+    | '/admin/staff'
     | '/book/confirmation'
     | '/rooms/$roomId'
     | '/admin/'
@@ -371,6 +383,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BookConfirmationRouteImport
       parentRoute: typeof BookRoute
     }
+    '/admin/staff': {
+      id: '/admin/staff'
+      path: '/staff'
+      fullPath: '/admin/staff'
+      preLoaderRoute: typeof AdminStaffRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/reservations': {
       id: '/admin/reservations'
       path: '/reservations'
@@ -431,6 +450,7 @@ interface AdminRouteChildren {
   AdminLoginRoute: typeof AdminLoginRoute
   AdminReportsRoute: typeof AdminReportsRoute
   AdminReservationsRoute: typeof AdminReservationsRoute
+  AdminStaffRoute: typeof AdminStaffRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
@@ -442,6 +462,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminLoginRoute: AdminLoginRoute,
   AdminReportsRoute: AdminReportsRoute,
   AdminReservationsRoute: AdminReservationsRoute,
+  AdminStaffRoute: AdminStaffRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 

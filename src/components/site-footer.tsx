@@ -53,7 +53,6 @@ export function SiteFooter() {
       </div>
       <div className="max-w-7xl mx-auto pt-16 mt-16 border-t border-espresso/5 flex flex-col sm:flex-row gap-2 justify-between items-center text-[10px] text-espresso/40 font-medium uppercase tracking-[0.2em]">
         <span>&copy; {new Date().getFullYear()} African Royal Villa &amp; Campsite</span>
-        <span>Tanzania Hospitality Group</span>
       </div>
     </footer>
   );
